@@ -1,4 +1,4 @@
-import { AirportCode } from "@/data/priceList";
+import { AirportCode } from "@/types/types";
 
 export default function AirportSelect({
   value,

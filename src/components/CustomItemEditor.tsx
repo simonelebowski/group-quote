@@ -1,4 +1,4 @@
-import { CustomLineItem } from "@/data/priceList";
+import { CustomLineItem } from "@/types/types";
 import Label from "./Label";
 
 function cryptoRandomId() {

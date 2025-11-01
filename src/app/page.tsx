@@ -1,17 +1,11 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import {
-  Currency,
-  Unit,
-  AirportCode,
-  PackageKey,
-  priceList,
-} from "@/data/priceList";
+import { Currency, Unit, AirportCode, PackageKey } from "@/types/types";
+import { priceList } from "@/data/priceList";
 import Row from "@/components/Row";
 import Label from "@/components/Label";
 import Card from "@/components/Card";
 import QtyInput from "@/components/QtyInput";
-import AirportSelect from "@/components/AirportSelect";
 import CustomItemsEditor from "@/components/CustomItemEditor";
 import Header from "@/components/Header";
 import Controls from "@/components/Controls";
@@ -333,7 +327,9 @@ export default function QuoteCalculatorPage() {
           </Card>
 
           <Card>
-            <h2 className="mb-3 text-lg font-semibold">5) Bus Cards</h2>
+            <h2 className="mb-3 text-lg font-semibold">
+              5) Bus Cards & Extras
+            </h2>
             <div className="space-y-3">
               {loc.busCards.map((b) => (
                 <div
@@ -354,6 +350,19 @@ export default function QuoteCalculatorPage() {
                   />
                 </div>
               ))}
+            </div>
+            <hr className="my-4" />
+            <div>
+              <div className="mb-2 font-medium">Extras (ad-hoc)</div>
+              <p className="mb-2 text-xs text-neutral-600">
+                Add charges or credits not covered above (e.g., single room
+                supplement, private guide, visa letter fee, discount). Choose
+                unit, quantity, and price.
+              </p>
+              <CustomItemsEditor
+                items={customItems}
+                setItems={setCustomItems}
+              />
             </div>
           </Card>
         </div>
@@ -721,24 +730,12 @@ export default function QuoteCalculatorPage() {
                   ))}
                 </div>
               </div>
-
-              <hr className="my-4" />
-              <div>
-                <div className="mb-2 font-semibold">
-                  Custom Line Items (ad-hoc charges/credits)
-                </div>
-                <CustomItemsEditor
-                  items={customItems}
-                  setItems={setCustomItems}
-                />
-              </div>
             </Card>
           </div>
         )}
 
         <footer className="mt-8 text-center text-xs text-neutral-500">
-          Built with React + TypeScript. Replace the mock priceList with your
-          own data.
+          FOOTER
         </footer>
       </div>
     </div>

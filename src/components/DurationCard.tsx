@@ -1,6 +1,6 @@
 import Card from "./Card";
 import Label from "./Label";
-import { PackageKey } from "@/data/priceList";
+import { PackageKey } from "@/types/types";
 
 export default function DurationCard({
   packageKey,
