@@ -1,5 +1,11 @@
 export type Currency = "GBP" | "EUR" | "USD";
-export type Unit = "perStudent" | "perLeader" | "perGroup" | "perUnit" | "flat";
+export type Unit =
+  | "perStudent"
+  | "perLeader"
+  | "perGroup"
+  | "perUnit"
+  | "perPerson"
+  | "flat";
 
 export type Activity = {
   id: string;
@@ -7,6 +13,13 @@ export type Activity = {
   unit: Unit; // how to apply the price
   price: number; // price in base currency
   description?: string;
+  qty?: number;
+};
+
+export type ActivityPick = {
+  enabled: boolean;
+  mode: "group" | "quantity";
+  count: number;
 };
 
 export type BusCardOption = {

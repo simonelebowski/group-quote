@@ -1,6 +1,12 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Currency, Unit, AirportCode, PackageKey } from "@/types/types";
+import {
+  Currency,
+  Unit,
+  AirportCode,
+  PackageKey,
+  ActivityPick,
+} from "@/types/types";
 import { priceList } from "@/data/priceList";
 import Row from "@/components/Row";
 import Label from "@/components/Label";
@@ -60,7 +66,7 @@ export default function QuoteCalculatorPage() {
     Record<string, number>
   >({});
   const [selectedBusCards, setSelectedBusCards] = useState<
-    Record<string, number>
+    Record<string, ActivityPick>
   >({});
 
   // NEW: admin overrides + custom items
@@ -139,27 +145,72 @@ export default function QuoteCalculatorPage() {
     // Activities
     let activitiesTotal = 0;
     let activitiesBreakdown: { label: string; total: number }[] = [];
-    Object.entries(selectedActivities).forEach(([id, qty]) => {
-      if (!qty) return;
+    Object.entries(selectedActivities).forEach(([id, sel]) => {
       const act = loc.activities.find((a) => a.id === id);
-      if (!act) return;
+      if (!act || !sel?.enabled) return;
+
       const price = ov.activities?.[id] ?? act.price;
+      const qtyTimes = Math.max(1, sel.qty ?? 1); // how many times you run the activity
       let subtotal = 0;
-      const label = `${act.name} x${qty}`;
+      let labelDetail = "";
+
       switch (act.unit) {
-        case "perStudent":
-          subtotal = price * qty * studentsAndPayingLeaders;
-          break;
-        case "perLeader":
-          subtotal = price * qty * leaders;
-          break;
         case "perGroup":
-        case "flat":
-          subtotal = price * qty;
+        case "flat": {
+          // Per-group price (your primary case) — headcount doesn't change price
+          subtotal = price * qtyTimes;
+          labelDetail =
+            sel.mode === "quantity" ? `(${sel.count} people)` : "(whole group)";
           break;
+        }
+
+        case "perStudent": {
+          const people =
+            sel.mode === "quantity"
+              ? Math.min(Math.max(sel.count || 0, 0), studentsAndPayingLeaders)
+              : studentsAndPayingLeaders;
+          subtotal = price * qtyTimes * people;
+          labelDetail =
+            sel.mode === "quantity" ? `(${people} students)` : "(all students)";
+          break;
+        }
+
+        case "perLeader": {
+          const people =
+            sel.mode === "quantity"
+              ? Math.min(Math.max(sel.count || 0, 0), leaders)
+              : leaders;
+          subtotal = price * qtyTimes * people;
+          labelDetail =
+            sel.mode === "quantity" ? `(${people} leaders)` : "(all leaders)";
+          break;
+        }
+
+        case "perPerson": {
+          // If you use a generic per-person unit
+          const maxGroup = studentsAndPayingLeaders + leaders;
+          const people =
+            sel.mode === "quantity"
+              ? Math.min(Math.max(sel.count || 0, 0), maxGroup)
+              : maxGroup;
+          subtotal = price * qtyTimes * people;
+          labelDetail =
+            sel.mode === "quantity"
+              ? `(${people} people)`
+              : "(whole group headcount)";
+          break;
+        }
+
+        default: {
+          subtotal = price * qtyTimes;
+        }
       }
+
       activitiesTotal += subtotal;
-      activitiesBreakdown.push({ label, total: subtotal });
+      activitiesBreakdown.push({
+        label: `${act.name} x${qtyTimes} ${labelDetail}`,
+        total: subtotal,
+      });
     });
 
     // Bus cards
@@ -298,31 +349,94 @@ export default function QuoteCalculatorPage() {
             <h2 className="mb-3 text-lg font-semibold">
               4) Activities & Trips
             </h2>
+
             <div className="space-y-3">
-              {loc.activities.map((a) => (
-                <div
-                  key={a.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border p-3"
-                >
-                  <div>
-                    <div className="font-medium">{a.name}</div>
-                    <div className="text-xs text-neutral-600">
-                      {unitLabel(a.unit)} · {fmt(a.price, loc.currency)}
-                    </div>
-                    {a.description && (
-                      <div className="text-xs text-neutral-600">
-                        {a.description}
+              {loc.activities.map((a) => {
+                const sel = selectedActivities[a.id] || {
+                  enabled: false,
+                  mode: "group",
+                  count: 0,
+                };
+
+                return (
+                  <div
+                    key={a.id}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3"
+                  >
+                    {/* Left: details + include checkbox */}
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-5 w-5"
+                        checked={sel.enabled}
+                        onChange={(e) =>
+                          setSelectedActivities((prev) => ({
+                            ...prev,
+                            [a.id]: {
+                              ...(prev[a.id] || { mode: "group", count: 0 }),
+                              enabled: e.target.checked,
+                            },
+                          }))
+                        }
+                      />
+                      <div>
+                        <div className="font-medium">{a.name}</div>
+                        <div className="text-xs text-neutral-600">
+                          {unitLabel(a.unit)} · {fmt(a.price, loc.currency)}
+                        </div>
+                        {a.description && (
+                          <div className="text-xs text-neutral-600">
+                            {a.description}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
+
+                    {/* Right: group/quantity selector (only active if ticked) */}
+                    <div className="flex items-center gap-2">
+                      <select
+                        className="input w-40"
+                        disabled={!sel.enabled}
+                        value={sel.mode}
+                        onChange={(e) =>
+                          setSelectedActivities((prev) => ({
+                            ...prev,
+                            [a.id]: {
+                              ...(prev[a.id] || { enabled: true, count: 0 }),
+                              mode: e.target.value as "group" | "quantity",
+                            },
+                          }))
+                        }
+                      >
+                        <option value="group">Whole group</option>
+                        <option value="quantity">Specific quantity</option>
+                      </select>
+
+                      {sel.enabled && sel.mode === "quantity" && (
+                        <input
+                          type="number"
+                          min={0}
+                          placeholder="# people"
+                          className="input w-28"
+                          value={sel.count}
+                          onChange={(e) =>
+                            setSelectedActivities((prev) => ({
+                              ...prev,
+                              [a.id]: {
+                                ...(prev[a.id] || {
+                                  enabled: true,
+                                  mode: "quantity",
+                                }),
+                                count: Math.max(0, Number(e.target.value) || 0),
+                              },
+                            }))
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
-                  <QtyInput
-                    value={selectedActivities[a.id] || 0}
-                    onChange={(n) =>
-                      setSelectedActivities((prev) => ({ ...prev, [a.id]: n }))
-                    }
-                  />
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
 
