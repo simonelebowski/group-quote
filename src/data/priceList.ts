@@ -82,6 +82,22 @@ export const priceList: PriceList = {
           price: 28,
         },
       ],
+      accommodationStudents: [
+        {
+          id: "full-board-shared-homestay",
+          name: "Full-board Shared Room Homestay Accommodation",
+          unit: "perStudent",
+          price: 0,
+        },
+      ],
+      accommodationLeaders: [
+        {
+          id: "full-board-homestay",
+          name: "Full-board Homestay Accommodation",
+          unit: "perLeader",
+          price: 0,
+        },
+      ],
     },
     {
       locationId: "london",
@@ -136,6 +152,22 @@ export const priceList: PriceList = {
           name: "Travelcard Zones 1-4 (7 days)",
           unit: "perStudent",
           price: 55,
+        },
+      ],
+      accommodationStudents: [
+        {
+          id: "half-board-shared-homestay",
+          name: "Half-board Shared Room Homestay Accommodation",
+          unit: "perStudent",
+          price: 0,
+        },
+      ],
+      accommodationLeaders: [
+        {
+          id: "half-board-homestay",
+          name: "Half-board Homestay Accommodation",
+          unit: "perLeader",
+          price: 0,
         },
       ],
     },

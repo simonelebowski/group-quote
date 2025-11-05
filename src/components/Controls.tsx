@@ -9,8 +9,9 @@ export default function Controls({
   setStudents,
   leaders,
   setLeaders,
-  clamp,
   freeLeaders,
+  setFreeLeaders,
+  clamp,
   packageKey,
   setPackageKey,
   baseNights,
@@ -38,6 +39,7 @@ export default function Controls({
         setLeaders={setLeaders}
         clamp={clamp}
         freeLeaders={freeLeaders}
+        setFreeLeaders={setFreeLeaders}
       />
 
       <DurationCard

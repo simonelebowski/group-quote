@@ -29,6 +29,13 @@ export type BusCardOption = {
   price: number;
 };
 
+export type AccommodationOption = {
+  id: string;
+  name: string;
+  unit: Unit;
+  price: number;
+};
+
 export type AirportCode =
   | "LGW"
   | "LHR"
@@ -58,6 +65,8 @@ export type LocationPricing = {
   transfer: TransferRule;
   activities: Activity[];
   busCards: BusCardOption[];
+  accommodationStudents: AccommodationOption[];
+  accommodationLeaders: AccommodationOption[];
 };
 
 export type PriceList = {

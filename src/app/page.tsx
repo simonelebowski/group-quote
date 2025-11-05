@@ -56,6 +56,7 @@ export default function QuoteCalculatorPage() {
 
   const [students, setStudents] = useState<number>(15);
   const [leaders, setLeaders] = useState<number>(1);
+  const [freeLeaders, setFreeLeaders] = useState<number>(0);
   const [packageKey, setPackageKey] = useState<PackageKey>("7n8d");
   const [customNights, setCustomNights] = useState<number | "">("");
   const [lessonsPerWeek, setLessonsPerWeek] = useState<number>(20);
@@ -78,10 +79,10 @@ export default function QuoteCalculatorPage() {
   const getOv = (id: string) => overrides[id] || {};
 
   // Auto-calc free leaders based on ratio; you can override manually by changing `leaders`.
-  const freeLeaders = useMemo(
-    () => Math.ceil(students / priceList.freeLeaderRatio),
-    [students]
-  );
+  // const freeLeaders = useMemo(
+  //   () => Math.ceil(students / priceList.freeLeaderRatio),
+  //   [students]
+  // );
 
   // Map package to nights baseline
   const packageNights: Record<PackageKey, number> = {
@@ -325,8 +326,9 @@ export default function QuoteCalculatorPage() {
           setStudents={setStudents}
           leaders={leaders}
           setLeaders={setLeaders}
-          clamp={clamp}
           freeLeaders={freeLeaders}
+          setFreeLeaders={setFreeLeaders}
+          clamp={clamp}
           packageKey={packageKey}
           setPackageKey={setPackageKey}
           baseNights={baseNights}
