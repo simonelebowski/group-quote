@@ -12,6 +12,10 @@ export default function LocationCard({
   clamp,
   freeLeaders,
   setFreeLeaders,
+  studentAccommodationId,
+  setStudentAccommodationId,
+  leaderAccommodationId,
+  setLeaderAccommodationId,
 }) {
   return (
     // <Card>
@@ -173,6 +177,55 @@ export default function LocationCard({
               )
             }
           />
+        </div>
+
+        {/* ACCOMMODATION PICKERS */}
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <Label>Accommodation (Students)</Label>
+            <select
+              className="input"
+              value={studentAccommodationId ?? ""}
+              onChange={(e) =>
+                setStudentAccommodationId(e.target.value || null)
+              }
+            >
+              {(
+                priceList.locations.find((l) => l.locationId === locationId)
+                  ?.accommodationStudents ?? []
+              ).map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.name}{" "}
+                  {opt.price ? `· +${fmt(opt.price, loc.currency)}` : ""}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-[11px] text-neutral-600">
+              Applied to students ({students}). Unit: per student.
+            </p>
+          </div>
+
+          <div>
+            <Label>Accommodation (Leaders)</Label>
+            <select
+              className="input"
+              value={leaderAccommodationId ?? ""}
+              onChange={(e) => setLeaderAccommodationId(e.target.value || null)}
+            >
+              {(
+                priceList.locations.find((l) => l.locationId === locationId)
+                  ?.accommodationLeaders ?? []
+              ).map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.name}{" "}
+                  {opt.price ? `· +${fmt(opt.price, loc.currency)}` : ""}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-[11px] text-neutral-600">
+              Applied to leaders ({leaders}). Unit: per leader.
+            </p>
+          </div>
         </div>
       </div>
     </Card>

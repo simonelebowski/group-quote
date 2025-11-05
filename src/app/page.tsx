@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Currency,
   Unit,
@@ -57,6 +57,12 @@ export default function QuoteCalculatorPage() {
   const [students, setStudents] = useState<number>(15);
   const [leaders, setLeaders] = useState<number>(1);
   const [freeLeaders, setFreeLeaders] = useState<number>(0);
+  const [studentAccommodationId, setStudentAccommodationId] = useState<
+    string | null
+  >(null);
+  const [leaderAccommodationId, setLeaderAccommodationId] = useState<
+    string | null
+  >(null);
   const [packageKey, setPackageKey] = useState<PackageKey>("7n8d");
   const [customNights, setCustomNights] = useState<number | "">("");
   const [lessonsPerWeek, setLessonsPerWeek] = useState<number>(20);
@@ -97,6 +103,17 @@ export default function QuoteCalculatorPage() {
 
   // Weeks inferred from nights; but allow manual override via `weeks`
   const inferredWeeks = nights >= 13 ? 2 : 1;
+
+  useEffect(() => {
+    const s0 =
+      priceList.locations.find((l) => l.locationId === locationId)
+        ?.accommodationStudents?.[0]?.id ?? null;
+    const l0 =
+      priceList.locations.find((l) => l.locationId === locationId)
+        ?.accommodationLeaders?.[0]?.id ?? null;
+    setStudentAccommodationId(s0);
+    setLeaderAccommodationId(l0);
+  }, [locationId]);
 
   // ---------------- Pricing Engine --------------------------
 
@@ -328,6 +345,10 @@ export default function QuoteCalculatorPage() {
           setLeaders={setLeaders}
           freeLeaders={freeLeaders}
           setFreeLeaders={setFreeLeaders}
+          studentAccommodationId={studentAccommodationId}
+          setStudentAccommodationId={setStudentAccommodationId}
+          leaderAccommodationId={leaderAccommodationId}
+          setLeaderAccommodationId={setLeaderAccommodationId}
           clamp={clamp}
           packageKey={packageKey}
           setPackageKey={setPackageKey}
