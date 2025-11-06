@@ -180,7 +180,55 @@ export default function LocationCard({
         </div>
 
         {/* ACCOMMODATION PICKERS */}
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          {/* Students accommodation */}
+          <div>
+            <Label>Students</Label>
+            <select
+              className="input w-full"
+              value={studentAccommodationId ?? ""}
+              onChange={(e) =>
+                setStudentAccommodationId(e.target.value || null)
+              }
+            >
+              {(
+                priceList.locations.find((l) => l.locationId === locationId)
+                  ?.accommodationStudents ?? []
+              ).map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.name}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-[11px] leading-4 text-neutral-600">
+              Applied to all students ({students}). Unit: per student.
+            </p>
+          </div>
+
+          {/* Leaders accommodation */}
+          <div>
+            <Label>Leaders</Label>
+            <select
+              className="input w-full"
+              value={leaderAccommodationId ?? ""}
+              onChange={(e) => setLeaderAccommodationId(e.target.value || null)}
+            >
+              {(
+                priceList.locations.find((l) => l.locationId === locationId)
+                  ?.accommodationLeaders ?? []
+              ).map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.name}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-[11px] leading-4 text-neutral-600">
+              Applied to all leaders ({leaders}). Unit: per leader.
+            </p>
+          </div>
+        </div>
+
+        {/* <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <Label>Accommodation (Students)</Label>
             <select
@@ -226,7 +274,7 @@ export default function LocationCard({
               Applied to leaders ({leaders}). Unit: per leader.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </Card>
   );
