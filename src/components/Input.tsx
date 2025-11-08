@@ -16,7 +16,7 @@ export default function Input({
       type="number"
       className={[
         "block",
-        "max-w-full",
+        "w-full",
         "h-10",
         "rounded-xl",
         "bg-white",
