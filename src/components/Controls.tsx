@@ -11,6 +11,10 @@ export default function Controls({
   setLeaders,
   freeLeaders,
   setFreeLeaders,
+  studentAccommodationId,
+  setStudentAccommodationId,
+  leaderAccommodationId,
+  setLeaderAccommodationId,
   clamp,
   packageKey,
   setPackageKey,
@@ -40,6 +44,10 @@ export default function Controls({
         clamp={clamp}
         freeLeaders={freeLeaders}
         setFreeLeaders={setFreeLeaders}
+        studentAccommodationId={studentAccommodationId}
+        setStudentAccommodationId={setStudentAccommodationId}
+        leaderAccommodationId={leaderAccommodationId}
+        setLeaderAccommodationId={setLeaderAccommodationId}
       />
 
       <DurationCard

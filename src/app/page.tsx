@@ -162,7 +162,7 @@ export default function QuoteCalculatorPage() {
 
     // Activities
     let activitiesTotal = 0;
-    let activitiesBreakdown: { label: string; total: number }[] = [];
+    const activitiesBreakdown: { label: string; total: number }[] = [];
     Object.entries(selectedActivities).forEach(([id, sel]) => {
       const act = loc.activities.find((a) => a.id === id);
       if (!act || !sel?.enabled) return;
@@ -233,7 +233,7 @@ export default function QuoteCalculatorPage() {
 
     // Bus cards
     let busCardsTotal = 0;
-    let busBreakdown: { label: string; total: number }[] = [];
+    const busBreakdown: { label: string; total: number }[] = [];
     Object.entries(selectedBusCards).forEach(([id, qty]) => {
       if (!qty) return;
       const card = loc.busCards.find((b) => b.id === id);
@@ -259,7 +259,7 @@ export default function QuoteCalculatorPage() {
 
     // Custom items
     let customTotal = 0;
-    let customBreakdown: { label: string; total: number }[] = [];
+    const customBreakdown: { label: string; total: number }[] = [];
     customItems.forEach((item) => {
       if (!item.qty) return;
       let subtotal = 0;
