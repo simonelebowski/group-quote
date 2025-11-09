@@ -5,9 +5,11 @@ import {
   Unit,
   AirportCode,
   PackageKey,
+  Overrides,
   ActivityPick,
 } from "@/types/types";
 import { priceList } from "@/data/priceList";
+import { calculatePricing } from "@/features/pricing/calculatePricing";
 import Row from "@/components/Row";
 import Label from "@/components/Label";
 import Card from "@/components/Card";
@@ -119,217 +121,229 @@ export default function QuoteCalculatorPage() {
   }, [locationId]);
 
   // ---------------- Pricing Engine --------------------------
+  const pricing = useMemo(
+    () =>
+      calculatePricing({
+        loc,
+        students,
+        leaders,
+        freeLeaders,
+        packageKey,
+        overrides,
+      }),
+    [loc, students, leaders, freeLeaders, packageKey, overrides]
+  );
 
-  const pricing = useMemo(() => {
-    const currency = loc.currency;
-    const payingLeaders = Math.max(0, leaders - freeLeaders); // leaders above the free allowance
-    const studentsAndPayingLeaders = students + payingLeaders;
+  // const pricing = useMemo(() => {
+  //   const currency = loc.currency;
+  //   const payingLeaders = Math.max(0, leaders - freeLeaders); // leaders above the free allowance
+  //   const studentsAndPayingLeaders = students + payingLeaders;
 
-    // Effective prices (apply overrides if present)
-    // const ov = getOv(loc.locationId);
-    const ov = overrides[loc.locationId] ?? {};
-    const basePerStudent =
-      ov.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
-    const perExtraNight = ov.perExtraNight ?? loc.perExtraNight;
-    const perFewerNight = ov.perFewerNight ?? loc.perFewerNight;
-    const perExtraLesson = ov.perExtraLesson ?? loc.perExtraLesson;
-    const perFewerLesson = ov.perFewerLesson ?? loc.perFewerLesson;
+  //   // Effective prices (apply overrides if present)
+  //   // const ov = getOv(loc.locationId);
+  //   const ov = overrides[loc.locationId] ?? {};
+  //   const basePerStudent =
+  //     ov.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
+  //   const perExtraNight = ov.perExtraNight ?? loc.perExtraNight;
+  //   const perFewerNight = ov.perFewerNight ?? loc.perFewerNight;
+  //   const perExtraLesson = ov.perExtraLesson ?? loc.perExtraLesson;
+  //   const perFewerLesson = ov.perFewerLesson ?? loc.perFewerLesson;
 
-    // Nights
-    const nightDelta = nights - baseNights;
-    const nightAdjPerStudent =
-      nightDelta > 0
-        ? nightDelta * perExtraNight
-        : Math.abs(nightDelta) * perFewerNight;
+  //   // Nights
+  //   const nightDelta = nights - baseNights;
+  //   const nightAdjPerStudent =
+  //     nightDelta > 0
+  //       ? nightDelta * perExtraNight
+  //       : Math.abs(nightDelta) * perFewerNight;
 
-    // Lessons (20 lessons/week included)
-    const effectiveWeeks = weeks || inferredWeeks;
-    const includedLessons = 20 * effectiveWeeks;
-    const lessonDelta = lessonsPerWeek * effectiveWeeks - includedLessons;
-    const lessonAdjPerStudent =
-      lessonDelta > 0
-        ? lessonDelta * perExtraLesson
-        : Math.abs(lessonDelta) * perFewerLesson;
+  //   // Lessons (20 lessons/week included)
+  //   const effectiveWeeks = weeks || inferredWeeks;
+  //   const includedLessons = 20 * effectiveWeeks;
+  //   const lessonDelta = lessonsPerWeek * effectiveWeeks - includedLessons;
+  //   const lessonAdjPerStudent =
+  //     lessonDelta > 0
+  //       ? lessonDelta * perExtraLesson
+  //       : Math.abs(lessonDelta) * perFewerLesson;
 
-    // Transfers (arrival + departure). Allow overrides by airport.
-    const transferSuppPrice = (airport: AirportCode) => {
-      const included = loc.transfer.includedAirports.includes(airport);
-      const ovSupp = ov.transferSupplements?.[airport];
-      const baseSupp =
-        loc.transfer.supplements[airport]?.price ??
-        loc.transfer.supplements.OTHER.price;
-      return included ? 0 : ovSupp ?? baseSupp;
-    };
-    const transferPerStudent =
-      transferSuppPrice(arrivalAirport) + transferSuppPrice(departureAirport);
+  //   // Transfers (arrival + departure). Allow overrides by airport.
+  //   const transferSuppPrice = (airport: AirportCode) => {
+  //     const included = loc.transfer.includedAirports.includes(airport);
+  //     const ovSupp = ov.transferSupplements?.[airport];
+  //     const baseSupp =
+  //       loc.transfer.supplements[airport]?.price ??
+  //       loc.transfer.supplements.OTHER.price;
+  //     return included ? 0 : ovSupp ?? baseSupp;
+  //   };
+  //   const transferPerStudent =
+  //     transferSuppPrice(arrivalAirport) + transferSuppPrice(departureAirport);
 
-    // Activities
-    let activitiesTotal = 0;
-    const activitiesBreakdown: { label: string; total: number }[] = [];
-    Object.entries(selectedActivities).forEach(([id, sel]) => {
-      const act = loc.activities.find((a) => a.id === id);
-      if (!act || !sel?.enabled) return;
+  //   // Activities
+  //   let activitiesTotal = 0;
+  //   const activitiesBreakdown: { label: string; total: number }[] = [];
+  //   Object.entries(selectedActivities).forEach(([id, sel]) => {
+  //     const act = loc.activities.find((a) => a.id === id);
+  //     if (!act || !sel?.enabled) return;
 
-      const price = ov.activities?.[id] ?? act.price;
-      const qtyTimes = Math.max(1, sel.qty ?? 1); // how many times you run the activity
-      let subtotal = 0;
-      let labelDetail = "";
+  //     const price = ov.activities?.[id] ?? act.price;
+  //     const qtyTimes = Math.max(1, sel.qty ?? 1); // how many times you run the activity
+  //     let subtotal = 0;
+  //     let labelDetail = "";
 
-      switch (act.unit) {
-        case "perGroup":
-        case "flat": {
-          // Per-group price (your primary case) — headcount doesn't change price
-          subtotal = price * qtyTimes;
-          labelDetail =
-            sel.mode === "quantity" ? `(${sel.count} people)` : "(whole group)";
-          break;
-        }
+  //     switch (act.unit) {
+  //       case "perGroup":
+  //       case "flat": {
+  //         // Per-group price (your primary case) — headcount doesn't change price
+  //         subtotal = price * qtyTimes;
+  //         labelDetail =
+  //           sel.mode === "quantity" ? `(${sel.count} people)` : "(whole group)";
+  //         break;
+  //       }
 
-        case "perStudent": {
-          const people =
-            sel.mode === "quantity"
-              ? Math.min(Math.max(sel.count || 0, 0), studentsAndPayingLeaders)
-              : studentsAndPayingLeaders;
-          subtotal = price * qtyTimes * people;
-          labelDetail =
-            sel.mode === "quantity" ? `(${people} students)` : "(all students)";
-          break;
-        }
+  //       case "perStudent": {
+  //         const people =
+  //           sel.mode === "quantity"
+  //             ? Math.min(Math.max(sel.count || 0, 0), studentsAndPayingLeaders)
+  //             : studentsAndPayingLeaders;
+  //         subtotal = price * qtyTimes * people;
+  //         labelDetail =
+  //           sel.mode === "quantity" ? `(${people} students)` : "(all students)";
+  //         break;
+  //       }
 
-        case "perLeader": {
-          const people =
-            sel.mode === "quantity"
-              ? Math.min(Math.max(sel.count || 0, 0), leaders)
-              : leaders;
-          subtotal = price * qtyTimes * people;
-          labelDetail =
-            sel.mode === "quantity" ? `(${people} leaders)` : "(all leaders)";
-          break;
-        }
+  //       case "perLeader": {
+  //         const people =
+  //           sel.mode === "quantity"
+  //             ? Math.min(Math.max(sel.count || 0, 0), leaders)
+  //             : leaders;
+  //         subtotal = price * qtyTimes * people;
+  //         labelDetail =
+  //           sel.mode === "quantity" ? `(${people} leaders)` : "(all leaders)";
+  //         break;
+  //       }
 
-        case "perPerson": {
-          // If you use a generic per-person unit
-          const maxGroup = studentsAndPayingLeaders + leaders;
-          const people =
-            sel.mode === "quantity"
-              ? Math.min(Math.max(sel.count || 0, 0), maxGroup)
-              : maxGroup;
-          subtotal = price * qtyTimes * people;
-          labelDetail =
-            sel.mode === "quantity"
-              ? `(${people} people)`
-              : "(whole group headcount)";
-          break;
-        }
+  //       case "perPerson": {
+  //         // If you use a generic per-person unit
+  //         const maxGroup = studentsAndPayingLeaders + leaders;
+  //         const people =
+  //           sel.mode === "quantity"
+  //             ? Math.min(Math.max(sel.count || 0, 0), maxGroup)
+  //             : maxGroup;
+  //         subtotal = price * qtyTimes * people;
+  //         labelDetail =
+  //           sel.mode === "quantity"
+  //             ? `(${people} people)`
+  //             : "(whole group headcount)";
+  //         break;
+  //       }
 
-        default: {
-          subtotal = price * qtyTimes;
-        }
-      }
+  //       default: {
+  //         subtotal = price * qtyTimes;
+  //       }
+  //     }
 
-      activitiesTotal += subtotal;
-      activitiesBreakdown.push({
-        label: `${act.name} x${qtyTimes} ${labelDetail}`,
-        total: subtotal,
-      });
-    });
+  //     activitiesTotal += subtotal;
+  //     activitiesBreakdown.push({
+  //       label: `${act.name} x${qtyTimes} ${labelDetail}`,
+  //       total: subtotal,
+  //     });
+  //   });
 
-    // Bus cards
-    let busCardsTotal = 0;
-    const busBreakdown: { label: string; total: number }[] = [];
-    Object.entries(selectedBusCards).forEach(([id, qty]) => {
-      if (!qty) return;
-      const card = loc.busCards.find((b) => b.id === id);
-      if (!card) return;
-      const price = ov.busCards?.[id] ?? card.price;
-      let subtotal = 0;
-      const label = `${card.name} x${qty}`;
-      if (card.unit === "perStudent") subtotal = price * qty * students;
-      else if (card.unit === "perLeader") subtotal = price * qty * leaders;
-      else subtotal = price * qty; // perGroup or flat
-      busCardsTotal += subtotal;
-      busBreakdown.push({ label, total: subtotal });
-    });
+  //   // Bus cards
+  //   let busCardsTotal = 0;
+  //   const busBreakdown: { label: string; total: number }[] = [];
+  //   Object.entries(selectedBusCards).forEach(([id, qty]) => {
+  //     if (!qty) return;
+  //     const card = loc.busCards.find((b) => b.id === id);
+  //     if (!card) return;
+  //     const price = ov.busCards?.[id] ?? card.price;
+  //     let subtotal = 0;
+  //     const label = `${card.name} x${qty}`;
+  //     if (card.unit === "perStudent") subtotal = price * qty * students;
+  //     else if (card.unit === "perLeader") subtotal = price * qty * leaders;
+  //     else subtotal = price * qty; // perGroup or flat
+  //     busCardsTotal += subtotal;
+  //     busBreakdown.push({ label, total: subtotal });
+  //   });
 
-    // Core totals
-    const perStudentCore =
-      basePerStudent +
-      nightAdjPerStudent +
-      lessonAdjPerStudent +
-      transferPerStudent;
-    const coreStudentsAndPayingLeadersTotal =
-      perStudentCore * studentsAndPayingLeaders;
+  //   // Core totals
+  //   const perStudentCore =
+  //     basePerStudent +
+  //     nightAdjPerStudent +
+  //     lessonAdjPerStudent +
+  //     transferPerStudent;
+  //   const coreStudentsAndPayingLeadersTotal =
+  //     perStudentCore * studentsAndPayingLeaders;
 
-    // Custom items
-    let customTotal = 0;
-    const customBreakdown: { label: string; total: number }[] = [];
-    customItems.forEach((item) => {
-      if (!item.qty) return;
-      let subtotal = 0;
-      if (item.unit === "perStudent")
-        subtotal = item.price * item.qty * students;
-      else if (item.unit === "perLeader")
-        subtotal = item.price * item.qty * leaders;
-      else subtotal = item.price * item.qty; // perGroup or flat
-      customTotal += subtotal;
-      customBreakdown.push({
-        label: `${item.name} x${item.qty}`,
-        total: subtotal,
-      });
-    });
+  //   // Custom items
+  //   let customTotal = 0;
+  //   const customBreakdown: { label: string; total: number }[] = [];
+  //   customItems.forEach((item) => {
+  //     if (!item.qty) return;
+  //     let subtotal = 0;
+  //     if (item.unit === "perStudent")
+  //       subtotal = item.price * item.qty * students;
+  //     else if (item.unit === "perLeader")
+  //       subtotal = item.price * item.qty * leaders;
+  //     else subtotal = item.price * item.qty; // perGroup or flat
+  //     customTotal += subtotal;
+  //     customBreakdown.push({
+  //       label: `${item.name} x${item.qty}`,
+  //       total: subtotal,
+  //     });
+  //   });
 
-    // Grand total
-    const grandTotal =
-      coreStudentsAndPayingLeadersTotal +
-      activitiesTotal +
-      busCardsTotal +
-      customTotal;
-    const perStudentAllIn = grandTotal / students;
+  //   // Grand total
+  //   const grandTotal =
+  //     coreStudentsAndPayingLeadersTotal +
+  //     activitiesTotal +
+  //     busCardsTotal +
+  //     customTotal;
+  //   const perStudentAllIn = grandTotal / students;
 
-    return {
-      currency,
-      perStudentCore,
-      coreStudentsAndPayingLeadersTotal,
-      activitiesTotal,
-      activitiesBreakdown,
-      busCardsTotal,
-      busBreakdown,
-      grandTotal,
-      perStudentAllIn,
-      customBreakdown,
-      meta: {
-        basePerStudent,
-        nightDelta,
-        nightAdjPerStudent,
-        lessonDelta,
-        lessonAdjPerStudent,
-        transferPerStudent,
-        payingLeaders,
-        includedLessons,
-        effectiveWeeks,
-        perExtraNight,
-        perFewerNight,
-        perExtraLesson,
-        perFewerLesson,
-      },
-    };
-  }, [
-    loc,
-    leaders,
-    freeLeaders,
-    packageKey,
-    nights,
-    baseNights,
-    lessonsPerWeek,
-    weeks,
-    arrivalAirport,
-    departureAirport,
-    selectedActivities,
-    selectedBusCards,
-    customItems,
-    students,
-    overrides,
-  ]);
+  //   return {
+  //     currency,
+  //     perStudentCore,
+  //     coreStudentsAndPayingLeadersTotal,
+  //     activitiesTotal,
+  //     activitiesBreakdown,
+  //     busCardsTotal,
+  //     busBreakdown,
+  //     grandTotal,
+  //     perStudentAllIn,
+  //     customBreakdown,
+  //     meta: {
+  //       basePerStudent,
+  //       nightDelta,
+  //       nightAdjPerStudent,
+  //       lessonDelta,
+  //       lessonAdjPerStudent,
+  //       transferPerStudent,
+  //       payingLeaders,
+  //       includedLessons,
+  //       effectiveWeeks,
+  //       perExtraNight,
+  //       perFewerNight,
+  //       perExtraLesson,
+  //       perFewerLesson,
+  //     },
+  //   };
+  // }, [
+  //   loc,
+  //   leaders,
+  //   freeLeaders,
+  //   packageKey,
+  //   nights,
+  //   baseNights,
+  //   lessonsPerWeek,
+  //   weeks,
+  //   arrivalAirport,
+  //   departureAirport,
+  //   selectedActivities,
+  //   selectedBusCards,
+  //   customItems,
+  //   students,
+  //   overrides,
+  // ]);
 
   // ------------------------ UI ------------------------------
 
@@ -532,7 +546,7 @@ export default function QuoteCalculatorPage() {
                 label="Nights (base→actual)"
                 value={`${baseNights} → ${nights}`}
               />
-              <Row
+              {/* <Row
                 label="Weeks (included lessons)"
                 value={`${pricing.meta.effectiveWeeks} (${pricing.meta.includedLessons})`}
               />
@@ -631,7 +645,7 @@ export default function QuoteCalculatorPage() {
                       ))}
                     </div>
                   </div>
-                )}
+                )} */}
             </div>
           </Card>
 
@@ -640,7 +654,11 @@ export default function QuoteCalculatorPage() {
             <div className="space-y-2 text-sm">
               <Row
                 label="Grand total"
-                value={fmt(pricing.grandTotal, pricing.currency)}
+                // value={fmt(pricing.grandTotal, pricing.currency)}
+                value={fmt(
+                  pricing.coreStudentsAndPayingLeadersTotal,
+                  pricing.currency
+                )}
                 strong
               />
               <Row

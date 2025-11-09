@@ -3,6 +3,7 @@ type NumberInputProps = {
   setValue: (value: number) => void;
   clamp: (value: number, min: number, max: number) => number;
   max?: number;
+  placeholder?: number;
 };
 
 export default function Input({
@@ -10,6 +11,7 @@ export default function Input({
   setValue,
   clamp,
   max,
+  placeholder,
 }: NumberInputProps) {
   return (
     <input
@@ -31,6 +33,7 @@ export default function Input({
         "focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10",
         "transition-shadow duration-150",
       ].join(" ")}
+      placeholder={placeholder !== undefined ? String(placeholder) : undefined}
       min={0}
       max={max ?? 9999}
       value={value}

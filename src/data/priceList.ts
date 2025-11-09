@@ -93,7 +93,7 @@ export const priceList: PriceList = {
       accommodationLeaders: [
         {
           id: "full-board-homestay",
-          name: "Full-board Homestay Accommodation",
+          name: "Full-board Single Room Homestay Accommodation",
           unit: "perLeader",
           price: 0,
         },
@@ -165,7 +165,7 @@ export const priceList: PriceList = {
       accommodationLeaders: [
         {
           id: "half-board-homestay",
-          name: "Half-board Homestay Accommodation",
+          name: "Half-board Single Room Homestay Accommodation",
           unit: "perLeader",
           price: 0,
         },

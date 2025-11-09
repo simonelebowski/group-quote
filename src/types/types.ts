@@ -1,4 +1,5 @@
 export type Currency = "GBP" | "EUR" | "USD";
+
 export type Unit =
   | "perStudent"
   | "perLeader"
@@ -82,3 +83,10 @@ export type CustomLineItem = {
   qty: number;
   price: number; // per-unit per the unit above
 };
+
+export type LocationOverride = {
+  basePackages?: Partial<Record<PackageKey, number>>;
+  // (we'll add more here in later steps)
+};
+
+export type Overrides = Record<string, LocationOverride>;
