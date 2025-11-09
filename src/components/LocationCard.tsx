@@ -14,14 +14,13 @@ export default function LocationCard({
   clamp,
   freeLeaders,
   setFreeLeaders,
-  studentAccommodationId,
-  setStudentAccommodationId,
-  leaderAccommodationId,
-  setLeaderAccommodationId,
+  groupName,
+  setGroupName,
+  fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
 }) {
-  const studentAccommodationOptions = location?.accommodationStudents ?? [];
-  const leaderAccommodationOptions = location?.accommodationLeaders ?? [];
-
   return (
     <Card>
       <h2 className="mb-3 text-lg font-semibold">1) Group</h2>
@@ -77,47 +76,87 @@ export default function LocationCard({
         </div>
       </div>
 
-      {/* ACCOMMODATION PICKERS */}
+      {/* OPTIONAL INPUTS */}
       <div className="col-span-3">
         <div className="mt-6 space-y-4 rounded-xl bg-neutral-100/80 p-4 ring-1 ring-neutral-200">
           <p className="text-xs uppercase tracking-wide text-neutral-500">
-            Accommodation
+            Optional inputs
           </p>
+
           <div className="space-y-4">
+            {/* Group name */}
             <div className="space-y-2">
-              <Label>Students</Label>
-              <select
-                className="input w-full"
-                value={studentAccommodationId ?? ""}
-                onChange={(e) =>
-                  setStudentAccommodationId(e.target.value || null)
-                }
-              >
-                <option value="">Select accommodation</option>
-                {studentAccommodationOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
+              <Label>Group name</Label>
+              <input
+                type="text"
+                className={[
+                  "block",
+                  "w-full",
+                  "h-10",
+                  "rounded-xl",
+                  "bg-white",
+                  "dark:bg-neutral-900",
+                  "border border-neutral-200/70 dark:border-neutral-800",
+                  "px-3",
+                  "text-sm",
+                  "leading-none",
+                  "focus:outline-none",
+                  "focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10",
+                  "transition-shadow duration-150",
+                ].join(" ")}
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+              ></input>
             </div>
 
-            <div className="space-y-2">
-              <Label>Leaders</Label>
-              <select
-                className="input w-full"
-                value={leaderAccommodationId ?? ""}
-                onChange={(e) =>
-                  setLeaderAccommodationId(e.target.value || null)
-                }
-              >
-                <option value="">Select accommodation</option>
-                {leaderAccommodationOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
+            {/* Dates */}
+            <div className="flex justify-between">
+              <div className="space-y-2">
+                <Label>From</Label>
+                <input
+                  type="date"
+                  className={[
+                    "block",
+                    "w-full",
+                    "h-10",
+                    "rounded-xl",
+                    "bg-white",
+                    "dark:bg-neutral-900",
+                    "border border-neutral-200/70 dark:border-neutral-800",
+                    "px-3",
+                    "text-sm",
+                    "leading-none",
+                    "focus:outline-none",
+                    "focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10",
+                    "transition-shadow duration-150",
+                  ].join(" ")}
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                ></input>
+              </div>
+              <div className="space-y-2">
+                <Label>To</Label>
+                <input
+                  type="date"
+                  className={[
+                    "block",
+                    "w-full",
+                    "h-10",
+                    "rounded-xl",
+                    "bg-white",
+                    "dark:bg-neutral-900",
+                    "border border-neutral-200/70 dark:border-neutral-800",
+                    "px-3",
+                    "text-sm",
+                    "leading-none",
+                    "focus:outline-none",
+                    "focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10",
+                    "transition-shadow duration-150",
+                  ].join(" ")}
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                ></input>
+              </div>
             </div>
           </div>
         </div>

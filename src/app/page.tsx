@@ -57,6 +57,9 @@ export default function QuoteCalculatorPage() {
   const [students, setStudents] = useState<number>(15);
   const [leaders, setLeaders] = useState<number>(1);
   const [freeLeaders, setFreeLeaders] = useState<number>(0);
+  const [groupName, setGroupName] = useState<string>("");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const [studentAccommodationId, setStudentAccommodationId] = useState<
     string | null
   >(null);
@@ -345,6 +348,12 @@ export default function QuoteCalculatorPage() {
           setLeaders={setLeaders}
           freeLeaders={freeLeaders}
           setFreeLeaders={setFreeLeaders}
+          groupName={groupName}
+          setGroupName={setGroupName}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
           studentAccommodationId={studentAccommodationId}
           setStudentAccommodationId={setStudentAccommodationId}
           leaderAccommodationId={leaderAccommodationId}

@@ -11,6 +11,12 @@ export default function Controls({
   setLeaders,
   freeLeaders,
   setFreeLeaders,
+  groupName,
+  setGroupName,
+  fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
   studentAccommodationId,
   setStudentAccommodationId,
   leaderAccommodationId,
@@ -44,10 +50,12 @@ export default function Controls({
         clamp={clamp}
         freeLeaders={freeLeaders}
         setFreeLeaders={setFreeLeaders}
-        studentAccommodationId={studentAccommodationId}
-        setStudentAccommodationId={setStudentAccommodationId}
-        leaderAccommodationId={leaderAccommodationId}
-        setLeaderAccommodationId={setLeaderAccommodationId}
+        groupName={groupName}
+        setGroupName={setGroupName}
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
       />
 
       <DurationCard
@@ -70,6 +78,10 @@ export default function Controls({
         departureAirport={departureAirport}
         setDepartureAirport={setDepartureAirport}
         loc={loc}
+        studentAccommodationId={studentAccommodationId}
+        setStudentAccommodationId={setStudentAccommodationId}
+        leaderAccommodationId={leaderAccommodationId}
+        setLeaderAccommodationId={setLeaderAccommodationId}
       />
     </div>
   );
