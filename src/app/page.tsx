@@ -130,8 +130,25 @@ export default function QuoteCalculatorPage() {
         freeLeaders,
         packageKey,
         overrides,
+        nights,
+        baseNights,
+        lessonsPerWeek,
+        weeks,
+        inferredWeeks,
       }),
-    [loc, students, leaders, freeLeaders, packageKey, overrides]
+    [
+      loc,
+      students,
+      leaders,
+      freeLeaders,
+      packageKey,
+      overrides,
+      nights,
+      baseNights,
+      lessonsPerWeek,
+      weeks,
+      inferredWeeks,
+    ]
   );
 
   // const pricing = useMemo(() => {
@@ -546,16 +563,16 @@ export default function QuoteCalculatorPage() {
                 label="Nights (base→actual)"
                 value={`${baseNights} → ${nights}`}
               />
-              {/* <Row
+              <Row
                 label="Weeks (included lessons)"
                 value={`${pricing.meta.effectiveWeeks} (${pricing.meta.includedLessons})`}
               />
               <Row label="Lessons/week" value={`${lessonsPerWeek}`} />
-              <Row
+              {/* <Row
                 label="Airports (arr/dep)"
                 value={`${arrivalAirport} / ${departureAirport}`}
               />
-              <hr className="my-2" />
+              <hr className="my-2" /> */}
               <Row
                 label="Base per student"
                 value={fmt(pricing.meta.basePerStudent, pricing.currency)}
@@ -583,15 +600,15 @@ export default function QuoteCalculatorPage() {
                   )}
                 />
               )}
-              {pricing.meta.transferPerStudent !== 0 && (
+              {/* {pricing.meta.transferPerStudent !== 0 && (
                 <Row
                   label={`Transfer supplement per student`}
                   value={fmt(pricing.meta.transferPerStudent, pricing.currency)}
                 />
-              )}
+              )} */}
               <Row
                 label="Core x (students + paying leaders)"
-                value={`${students + pricing.meta.payingLeaders} × ${fmt(
+                value={`${students + pricing.payingLeaders} × ${fmt(
                   pricing.perStudentCore,
                   pricing.currency
                 )}`}
@@ -603,7 +620,7 @@ export default function QuoteCalculatorPage() {
                   pricing.currency
                 )}
               />
-              {pricing.activitiesBreakdown.length > 0 && (
+              {/*        {pricing.activitiesBreakdown.length > 0 && (
                 <div className="mt-2">
                   <div className="mb-1 font-medium">Activities</div>
                   <div className="space-y-1">
