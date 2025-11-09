@@ -564,6 +564,10 @@ export default function QuoteCalculatorPage() {
                 value={`${baseNights} → ${nights}`}
               />
               <Row
+                label="Total lessons"
+                value={`${pricing.meta.totalLessons}`}
+              />
+              <Row
                 label="Weeks (included lessons)"
                 value={`${pricing.meta.effectiveWeeks} (${pricing.meta.includedLessons})`}
               />

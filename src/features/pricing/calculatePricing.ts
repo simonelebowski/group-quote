@@ -4,6 +4,7 @@ import {
   AirportCode,
   Overrides,
 } from "@/types/types";
+import { getEffectiveRates } from "./pricingUtils";
 
 export type PricingResult = {
   currency: string;
@@ -25,6 +26,7 @@ export type PricingResult = {
     // lessons
     effectiveWeeks: number;
     includedLessons: number;
+    totalLessons: number;
     lessonDelta: number;
     lessonAdjPerStudent: number;
 
@@ -77,19 +79,18 @@ export function calculatePricing({
 
   // apply override for base package if present
   const ov = overrides[loc.locationId] ?? {};
-  const basePerStudent =
-    ov.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
-
-  const perExtraNight = ov.perExtraNight ?? loc.perExtraNight;
-  const perFewerNight = ov.perFewerNight ?? loc.perFewerNight;
-  const perExtraLesson = ov.perExtraLesson ?? loc.perExtraLesson;
-  const perFewerLesson = ov.perFewerLesson ?? loc.perFewerLesson;
+  const {
+    basePerStudent,
+    perExtraNight,
+    perFewerNight,
+    perExtraLesson,
+    perFewerLesson,
+  } = getEffectiveRates(loc, packageKey, ov);
 
   //
   // Nights adjustment
   //
   const nightDelta = nights - baseNights;
-
   const nightAdjPerStudent =
     nightDelta === 0
       ? 0
@@ -103,6 +104,8 @@ export function calculatePricing({
   const effectiveWeeks = weeks || inferredWeeks;
   const includedLessons = 20 * effectiveWeeks;
 
+  const totalLessons = lessonsPerWeek * effectiveWeeks;
+
   const lessonDelta = lessonsPerWeek * effectiveWeeks - includedLessons;
 
   const lessonAdjPerStudent =
@@ -110,7 +113,7 @@ export function calculatePricing({
       ? 0
       : lessonDelta > 0
       ? lessonDelta * perExtraLesson
-      : Math.abs(lessonDelta) * perFewerLesson;
+      : lessonDelta * perFewerLesson;
 
   //
   // Core per-student and totals
@@ -139,6 +142,7 @@ export function calculatePricing({
       nightAdjPerStudent,
       effectiveWeeks,
       includedLessons,
+      totalLessons,
       lessonDelta,
       lessonAdjPerStudent,
       perExtraNight,

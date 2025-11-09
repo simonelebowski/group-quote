@@ -1,17 +1,21 @@
-import { LocationPricing, PackageKey, Overrides } from "@/types/types";
+// FOR NOW I'M NOT SPLITTING THE MAIN FUNCTION
+
+import { LocationPricing, PackageKey, LocationOverride } from "@/types/types";
 
 export function getEffectiveRates(
   loc: LocationPricing,
   packageKey: PackageKey,
-  ov: ReturnType<typeof getLocationOverride>
+  ov: LocationOverride | undefined
 ) {
-  const basePerStudent =
-    ov.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
+  const o = ov ?? {};
 
-  const perExtraNight = ov.perExtraNight ?? loc.perExtraNight;
-  const perFewerNight = ov.perFewerNight ?? loc.perFewerNight;
-  const perExtraLesson = ov.perExtraLesson ?? loc.perExtraLesson;
-  const perFewerLesson = ov.perFewerLesson ?? loc.perFewerLesson;
+  const basePerStudent =
+    o.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
+
+  const perExtraNight = o.perExtraNight ?? loc.perExtraNight;
+  const perFewerNight = o.perFewerNight ?? loc.perFewerNight;
+  const perExtraLesson = o.perExtraLesson ?? loc.perExtraLesson;
+  const perFewerLesson = o.perFewerLesson ?? loc.perFewerLesson;
 
   return {
     basePerStudent,
@@ -20,4 +24,24 @@ export function getEffectiveRates(
     perExtraLesson,
     perFewerLesson,
   };
+}
+
+export function computeNightAdjustment(
+  nights: number,
+  baseNights: number,
+  perExtraNight: number,
+  perFewerNight: number
+) {
+  const nightDelta = nights - baseNights;
+
+  if (nightDelta === 0) {
+    return { nightDelta, nightAdjPerStudent: 0 };
+  }
+
+  const nightAdjPerStudent =
+    nightDelta > 0
+      ? nightDelta * perExtraNight
+      : Math.abs(nightDelta) * perFewerNight;
+
+  return { nightDelta, nightAdjPerStudent };
 }

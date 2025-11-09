@@ -86,7 +86,10 @@ export type CustomLineItem = {
 
 export type LocationOverride = {
   basePackages?: Partial<Record<PackageKey, number>>;
-  // (we'll add more here in later steps)
+  perExtraNight?: number;
+  perFewerNight?: number;
+  perExtraLesson?: number;
+  perFewerLesson?: number;
 };
 
 export type Overrides = Record<string, LocationOverride>;
