@@ -567,11 +567,25 @@ export default function QuoteCalculatorPage() {
                 label="Total lessons"
                 value={`${pricing.meta.totalLessons}`}
               />
-              <Row
+
+              {pricing.meta.lessonDelta !== 0 && (
+  <Row
+    label={`Lesson adjustment per student (${
+      pricing.meta.lessonDelta > 0 ? "+" : "-"
+    }${Math.abs(pricing.meta.lessonDelta)} lesson${
+      Math.abs(pricing.meta.lessonDelta) !== 1 ? "s" : ""
+    })`}
+    value={fmt(
+      pricing.meta.lessonAdjPerStudent,
+      pricing.currency
+    )}
+  />
+)}
+              {/* <Row
                 label="Weeks (included lessons)"
                 value={`${pricing.meta.effectiveWeeks} (${pricing.meta.includedLessons})`}
               />
-              <Row label="Lessons/week" value={`${lessonsPerWeek}`} />
+              <Row label="Lessons/week" value={`${lessonsPerWeek}`} /> */}
               {/* <Row
                 label="Airports (arr/dep)"
                 value={`${arrivalAirport} / ${departureAirport}`}

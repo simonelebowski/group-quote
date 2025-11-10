@@ -74,10 +74,12 @@ export function calculatePricing({
   inferredWeeks,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
+
+  // 1) Leaders / paying heads
   const payingLeaders = Math.max(0, leaders - freeLeaders);
   const studentsAndPayingLeaders = students + payingLeaders;
 
-  // apply override for base package if present
+  // 2) Apply override for base package if present + effective rates
   const ov = overrides[loc.locationId] ?? {};
   const {
     basePerStudent,
@@ -87,9 +89,7 @@ export function calculatePricing({
     perFewerLesson,
   } = getEffectiveRates(loc, packageKey, ov);
 
-  //
-  // Nights adjustment
-  //
+  // 3) Nights adjustment
   const nightDelta = nights - baseNights;
   const nightAdjPerStudent =
     nightDelta === 0
@@ -98,15 +98,17 @@ export function calculatePricing({
       ? nightDelta * perExtraNight
       : Math.abs(nightDelta) * perFewerNight;
 
-  //
-  // Lessons adjustment (20 lessons/week included)
-  //
+  // 4) Lessons based on package key
+  // 6/7 nights = 1 "week" → 20 base lessons
+  // 13/14 nights = 2 "weeks" → 40 base lessons
+  const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
+
   const effectiveWeeks = weeks || inferredWeeks;
-  const includedLessons = 20 * effectiveWeeks;
+  const includedLessons = 20 * packageWeeks;
 
-  const totalLessons = lessonsPerWeek * effectiveWeeks;
+  const totalLessons = lessonsPerWeek * packageWeeks;
 
-  const lessonDelta = lessonsPerWeek * effectiveWeeks - includedLessons;
+  const lessonDelta = totalLessons - includedLessons;
 
   const lessonAdjPerStudent =
     lessonDelta === 0
@@ -115,9 +117,7 @@ export function calculatePricing({
       ? lessonDelta * perExtraLesson
       : lessonDelta * perFewerLesson;
 
-  //
-  // Core per-student and totals
-  //
+  // 5) Core per-student and totals
   const perStudentCore =
     basePerStudent + nightAdjPerStudent + lessonAdjPerStudent;
 

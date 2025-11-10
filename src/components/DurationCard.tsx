@@ -4,6 +4,8 @@ import { PackageKey } from "@/types/types";
 import Select from "./Select";
 import Input from "./Input";
 
+const defaultLessonsForPackage = (pkg: PackageKey) => pkg === "13n14d" || pkg === "14n15d" ? 40 : 20;
+
 export default function DurationCard({
   packageKey,
   setPackageKey,
@@ -23,7 +25,11 @@ export default function DurationCard({
       <Label>Standard Package</Label>
       <Select
         value={packageKey}
-        setValue={(v) => {setPackageKey(v as PackageKey); setCustomNights('')}}
+        setValue={(v) => {
+          const next = v as PackageKey; 
+          setPackageKey(next); 
+          setCustomNights(''); 
+          setLessonsPerWeek(defaultLessonsForPackage(next))}}
         options={[
           { value: "6n7d", label: "6 nights / 7 days" },
           { value: "7n8d", label: "7 nights / 8 days" },
@@ -77,15 +83,15 @@ export default function DurationCard({
 
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div>
-          <Label>Lessons per week</Label>
+          <Label>Total Lessons</Label>
           <input
             type="number"
             className="input"
             min={0}
-            max={40}
+            max={60}
             value={lessonsPerWeek}
             onChange={(e) =>
-              setLessonsPerWeek(clamp(parseInt(e.target.value || "0"), 0, 40))
+              setLessonsPerWeek(clamp(parseInt(e.target.value || "0"), 0, 60))
             }
           />
           <p className="mt-1 text-xs text-neutral-600">
