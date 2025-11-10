@@ -101,13 +101,9 @@ export function calculatePricing({
   // 4) Lessons based on package key
   // 6/7 nights = 1 "week" → 20 base lessons
   // 13/14 nights = 2 "weeks" → 40 base lessons
-  const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
-
+  const includedLessons = packageKey === "6n7d" || packageKey === "7n8d" ? 20 : 40;
+  const totalLessons = lessonsPerWeek;
   const effectiveWeeks = weeks || inferredWeeks;
-  const includedLessons = 20 * packageWeeks;
-
-  const totalLessons = lessonsPerWeek * packageWeeks;
-
   const lessonDelta = totalLessons - includedLessons;
 
   const lessonAdjPerStudent =

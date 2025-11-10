@@ -95,7 +95,8 @@ export default function DurationCard({
             }
           />
           <p className="mt-1 text-xs text-neutral-600">
-            20 lessons/week included. Adjusts ± per lesson.
+              20 lessons included for 6–7 night packages, 40 for 13–14 night packages.
+              Adjusts ± per lesson. 
           </p>
         </div>
       </div>
