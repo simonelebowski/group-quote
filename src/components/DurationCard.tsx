@@ -23,7 +23,7 @@ export default function DurationCard({
       <Label>Standard Package</Label>
       <Select
         value={packageKey}
-        setValue={(v) => setPackageKey(v as PackageKey)}
+        setValue={(v) => {setPackageKey(v as PackageKey); setCustomNights('')}}
         options={[
           { value: "6n7d", label: "6 nights / 7 days" },
           { value: "7n8d", label: "7 nights / 8 days" },
