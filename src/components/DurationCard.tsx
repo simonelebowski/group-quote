@@ -13,9 +13,9 @@ export default function DurationCard({
   customNights,
   setCustomNights,
   clamp,
-  weeks,
-  setWeeks,
-  inferredWeeks,
+  // weeks,
+  // setWeeks,
+  // inferredWeeks,
   lessonsPerWeek,
   setLessonsPerWeek,
 }) {
@@ -40,63 +40,32 @@ export default function DurationCard({
 
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div>
-          <Label>Custom Nights (optional)</Label>
+          <div className="min-h-[40px] flex items-end">
+            <Label>Custom Nights (optional)</Label>
+          </div>
           <Input
             value={customNights}
             setValue={setCustomNights}
             clamp={clamp}
             placeholder={baseNights}
           />
-          {/* <input
-            type="number"
-            className="input"
-            min={1}
-            placeholder={`${baseNights}`}
-            value={customNights}
-            onChange={(e) => {
-              const v = e.target.value;
-              setCustomNights(v === "" ? "" : clamp(parseInt(v), 1, 60));
-            }}
-          /> */}
           <p className="mt-1 text-xs text-neutral-600">
             Leave blank to use the package default of <b>{baseNights}</b>{" "}
             nights.
           </p>
         </div>
         <div>
-          <Label>Weeks</Label>
-          <input
-            type="number"
-            className="input"
-            min={1}
-            max={8}
-            value={weeks}
-            onChange={(e) =>
-              setWeeks(clamp(parseInt(e.target.value || "1"), 1, 8))
-            }
-          />
-          <p className="mt-1 text-xs text-neutral-600">
-            Inferred from nights: <b>{inferredWeeks}</b> week(s)
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <div>
-          <Label>Total Lessons</Label>
-          <input
-            type="number"
-            className="input"
-            min={0}
+          <div className="min-h-[40px] flex items-end">
+            <Label>Total Lessons</Label>
+          </div>
+          <Input
             max={60}
             value={lessonsPerWeek}
-            onChange={(e) =>
-              setLessonsPerWeek(clamp(parseInt(e.target.value || "0"), 0, 60))
-            }
+            setValue={setLessonsPerWeek}
+            clamp={clamp}
           />
           <p className="mt-1 text-xs text-neutral-600">
-              20 lessons included for 6–7 night packages, 40 for 13–14 night packages.
-              Adjusts ± per lesson. 
+              Adjusts ± per lesson if needed. 
           </p>
         </div>
       </div>

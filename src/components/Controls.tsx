@@ -65,9 +65,9 @@ export default function Controls({
         customNights={customNights}
         setCustomNights={setCustomNights}
         clamp={clamp}
-        weeks={weeks}
-        setWeeks={setWeeks}
-        inferredWeeks={inferredWeeks}
+        // weeks={weeks}
+        // setWeeks={setWeeks}
+        // inferredWeeks={inferredWeeks}
         lessonsPerWeek={lessonsPerWeek}
         setLessonsPerWeek={setLessonsPerWeek}
       />
