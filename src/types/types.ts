@@ -8,6 +8,12 @@ export type Unit =
   | "perPerson"
   | "flat";
 
+export type ActivityCategory = 
+  | "afternoon"
+  | "evening"
+  | "halfDay"
+  | "fullDay";
+
 export type Activity = {
   id: string;
   name: string;
@@ -15,6 +21,7 @@ export type Activity = {
   price: number; // price in base currency
   description?: string;
   qty?: number;
+  category: ActivityCategory; 
 };
 
 export type ActivityPick = {
@@ -43,7 +50,6 @@ export type AirportCode =
   | "LTN"
   | "STN"
   | "LCY"
-  | "SEN"
   | "OTHER";
 
 export type TransferRule = {

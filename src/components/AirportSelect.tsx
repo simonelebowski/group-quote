@@ -14,7 +14,6 @@ export default function AirportSelect({
     { code: "LTN", name: "Luton (LTN)" },
     { code: "STN", name: "Stansted (STN)" },
     { code: "LCY", name: "London City (LCY)" },
-    { code: "SEN", name: "Southend (SEN)" },
     { code: "OTHER", name: "Other" },
   ];
   return (

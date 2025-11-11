@@ -17,6 +17,7 @@ import QtyInput from "@/components/QtyInput";
 import CustomItemsEditor from "@/components/CustomItemEditor";
 import Header from "@/components/Header";
 import Controls from "@/components/Controls";
+import ActivityRow from "@/components/ActivityRow";
 
 // ---- Admin override types (manual price editing) ----
 type LocationOverrides = {
@@ -502,6 +503,8 @@ export default function QuoteCalculatorPage() {
               })}
             </div>
           </Card>
+
+          
 
           <Card>
             <h2 className="mb-3 text-lg font-semibold">
