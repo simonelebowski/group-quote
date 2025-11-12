@@ -2,7 +2,42 @@ import {useState, useMemo} from 'react'
 import Card from "./Card";
 import { Activity, ActivityCategory } from '@/types/types';
 
+const LABELS: Record<ActivityCategory, string> = {
+  afternoon: "Afternoon activities",
+  evening: "Evening activities",
+  halfDay: "Half-day tours",
+  fullDay: "Full-day tours",
+};
+
 export default function ActivitiesCard({loc, selectedActivities, setSelectedActivities, unitLabel, fmt}) {
+    const [open, setOpen] = useState<Record<ActivityCategory, boolean>>({
+    afternoon: true,
+    evening: false,
+    halfDay: false,
+    fullDay: false,
+  });
+
+    const byCategory = useMemo(() => {
+    const map: Record<ActivityCategory, Activity[]> = {
+      afternoon: [],
+      evening: [],
+      halfDay: [],
+      fullDay: [],
+    };
+    for (const a of loc.activities) {
+      const cat = a.category 
+      map[cat].push(a);
+    }
+    return map;
+  }, [loc.activities]);
+
+    const toggle = (cat: ActivityCategory) =>
+    setOpen((o) => ({ ...o, [cat]: !o[cat] }));
+
+  const Section = ({ cat }: { cat: ActivityCategory }) => {
+    const items = byCategory[cat];
+    if (!items?.length) return null;
+
     return (
         <Card>
             <h2 className="mb-3 text-lg font-semibold">
