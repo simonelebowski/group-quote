@@ -6,6 +6,8 @@ const LABELS: Record<ActivityCategory, string> = {
   afternoon: "Afternoon activities",
   evening: "Evening activities",
   halfDay: "Half-day tours",
+  halfDayExtras: "Half-day tours extras",
+  halfDayActivities: "Half-day activities",
   fullDay: "Full-day tours",
 };
 
@@ -14,6 +16,8 @@ export default function ActivitiesCard({loc, selectedActivities, setSelectedActi
     afternoon: true,
     evening: false,
     halfDay: false,
+    halfDayExtras: false,
+    halfDayActivities: false,
     fullDay: false,
   });
 
@@ -22,6 +26,8 @@ export default function ActivitiesCard({loc, selectedActivities, setSelectedActi
       afternoon: [],
       evening: [],
       halfDay: [],
+      halfDayExtras: [],
+      halfDayActivities: [],
       fullDay: [],
     };
     for (const a of loc.activities) {
@@ -151,6 +157,8 @@ export default function ActivitiesCard({loc, selectedActivities, setSelectedActi
         <Section cat="afternoon" />
         <Section cat="evening" />
         <Section cat="halfDay" />
+        <Section cat="halfDayExtras" />
+        <Section cat="halfDayActivities" />
         <Section cat="fullDay" />
       </div>
     </Card>

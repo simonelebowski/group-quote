@@ -12,6 +12,8 @@ export type ActivityCategory =
   | "afternoon"
   | "evening"
   | "halfDay"
+  | "halfDayExtras"
+  | "halfDayActivities"
   | "fullDay";
 
 export type Activity = {
