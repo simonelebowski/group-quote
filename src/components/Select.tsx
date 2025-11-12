@@ -16,6 +16,8 @@ export default function Select({
   options,
   className = "",
 }: SelectProps) {
+  const safeValue = value ?? "";
+
   return (
     <select
       className={[
@@ -34,7 +36,7 @@ export default function Select({
         "transition-shadow duration-150",
         "[&::-ms-expand]:hidden",
       ].join(" ")}
-      value={value}
+      value={safeValue}
       onChange={(e) => setValue(e.target.value)}
     >
       {options.map((opt) => (
