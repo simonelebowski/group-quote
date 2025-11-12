@@ -2,7 +2,7 @@ import {useState, useMemo} from 'react'
 import Card from "./Card";
 import { Activity, ActivityCategory } from '@/types/types';
 
-export default function ActivitiesCard() {
+export default function ActivitiesCard({loc, selectedActivities, setSelectedActivities, unitLabel, fmt}) {
     return (
         <Card>
             <h2 className="mb-3 text-lg font-semibold">
