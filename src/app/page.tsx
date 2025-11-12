@@ -5,7 +5,6 @@ import {
   Unit,
   AirportCode,
   PackageKey,
-  Overrides,
   ActivityPick,
 } from "@/types/types";
 import { priceList } from "@/data/priceList";
@@ -13,12 +12,10 @@ import { calculatePricing } from "@/features/pricing/calculatePricing";
 import Row from "@/components/Row";
 import Label from "@/components/Label";
 import Card from "@/components/Card";
-import QtyInput from "@/components/QtyInput";
-import CustomItemsEditor from "@/components/CustomItemEditor";
 import Header from "@/components/Header";
 import Controls from "@/components/Controls";
-import ActivityRow from "@/components/ActivityRow";
 import ActivitiesCard from "@/components/ActivitiesCard";
+import BusExtras from "@/components/BusExtras";
 
 // ---- Admin override types (manual price editing) ----
 type LocationOverrides = {
@@ -411,46 +408,7 @@ export default function QuoteCalculatorPage() {
 
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <ActivitiesCard loc={loc} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} unitLabel={unitLabel} fmt={fmt} />
-        
-          <Card>
-            <h2 className="mb-3 text-lg font-semibold">
-              5) Bus Cards & Extras
-            </h2>
-            <div className="space-y-3">
-              {loc.busCards.map((b) => (
-                <div
-                  key={b.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border p-3"
-                >
-                  <div>
-                    <div className="font-medium">{b.name}</div>
-                    <div className="text-xs text-neutral-600">
-                      {unitLabel(b.unit)} · {fmt(b.price, loc.currency)}
-                    </div>
-                  </div>
-                  <QtyInput
-                    value={selectedBusCards[b.id] || 0}
-                    onChange={(n) =>
-                      setSelectedBusCards((prev) => ({ ...prev, [b.id]: n }))
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-            <hr className="my-4" />
-            <div>
-              <div className="mb-2 font-medium">Extras (ad-hoc)</div>
-              <p className="mb-2 text-xs text-neutral-600">
-                Add charges or credits not covered above (e.g., single room
-                supplement, private guide, visa letter fee, discount). Choose
-                unit, quantity, and price.
-              </p>
-              <CustomItemsEditor
-                items={customItems}
-                setItems={setCustomItems}
-              />
-            </div>
-          </Card>
+          <BusExtras loc={loc} selectedBusCards={selectedBusCards} setSelectedBusCards={setSelectedBusCards} customItems={customItems} setCustomItems={setCustomItems} unitLabel={unitLabel} fmt={fmt} />
         </div>
 
         {/* Summary */}
