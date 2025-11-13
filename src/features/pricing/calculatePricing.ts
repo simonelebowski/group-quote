@@ -96,7 +96,8 @@ export function calculatePricing({
       ? 0
       : nightDelta > 0
       ? nightDelta * perExtraNight
-      : Math.abs(nightDelta) * perFewerNight;
+      : nightDelta * perFewerLesson
+      // : Math.abs(nightDelta) * perFewerNight;
 
   // 4) Lessons based on package key
   // 6/7 nights = 1 "week" → 20 base lessons
