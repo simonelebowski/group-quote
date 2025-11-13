@@ -13,7 +13,7 @@ const LABELS: Record<ActivityCategory, string> = {
 
 export default function ActivitiesCard({loc, selectedActivities, setSelectedActivities, unitLabel, fmt}) {
     const [open, setOpen] = useState<Record<ActivityCategory, boolean>>({
-    afternoon: true,
+    afternoon: false,
     evening: false,
     halfDay: false,
     halfDayExtras: false,

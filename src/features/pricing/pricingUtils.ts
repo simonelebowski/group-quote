@@ -45,3 +45,32 @@ export function computeNightAdjustment(
 
   return { nightDelta, nightAdjPerStudent };
 }
+
+export function getAccommodationDiscountTotal(
+  packageKey: PackageKey,
+  students: number,
+  leaders: number,
+  studentAccommodationId: string | null,
+  leaderAccommodationId: string | null
+): number {
+  const isLong =
+    packageKey === "13n14d" || packageKey === "14n15d";
+
+  const studentDiscountPer =
+    isLong ? 430 : 215; // per student, £
+  const leaderDiscountPer =
+    isLong ? 490 : 245; // per leader, £
+
+  let total = 0;
+
+  if (studentAccommodationId === "no-accommodation") {
+    total += studentDiscountPer * students;
+  }
+
+  if (leaderAccommodationId === "no-accommodation") {
+    total += leaderDiscountPer * leaders;
+  }
+
+  // return a negative number to represent a discount
+  return -total;
+}

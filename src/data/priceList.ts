@@ -186,11 +186,23 @@ export const priceList: PriceList = {
           unit: "perStudent",
           price: 0,
         },
+        {
+          id: "no-accommodation",
+          name: "No accommodation",
+          unit: "perStudent",
+          price: 0,
+        },
       ],
       accommodationLeaders: [
         {
           id: "full-board-homestay",
           name: "Full-board Single Room Homestay Accommodation",
+          unit: "perLeader",
+          price: 0,
+        },
+        {
+          id: "no-accommodation",
+          name: "No accommodation",
           unit: "perLeader",
           price: 0,
         },
