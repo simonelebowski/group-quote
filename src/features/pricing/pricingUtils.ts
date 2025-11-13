@@ -46,31 +46,33 @@ export function computeNightAdjustment(
   return { nightDelta, nightAdjPerStudent };
 }
 
-export function getAccommodationDiscountTotal(
+export function computeAccommodationAdjustment(
+  loc: LocationPricing,
   packageKey: PackageKey,
   students: number,
   leaders: number,
   studentAccommodationId: string | null,
   leaderAccommodationId: string | null
 ): number {
-  const isLong =
-    packageKey === "13n14d" || packageKey === "14n15d";
+  // 6/7 nights → 1 “unit”, 13/14 nights → 2 “units”
+  const packageWeeks =
+    packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
 
-  const studentDiscountPer =
-    isLong ? 430 : 215; // per student, £
-  const leaderDiscountPer =
-    isLong ? 490 : 245; // per leader, £
+  // find selected options; fall back to first option if something is missing
+  const studentOpt =
+    loc.accommodationStudents.find((a) => a.id === studentAccommodationId) ??
+    loc.accommodationStudents[0];
 
-  let total = 0;
+  const leaderOpt =
+    loc.accommodationLeaders.find((a) => a.id === leaderAccommodationId) ??
+    loc.accommodationLeaders[0];
 
-  if (studentAccommodationId === "no-accommodation") {
-    total += studentDiscountPer * students;
-  }
+  const studentPerHead = studentOpt?.price ?? 0;
+  const leaderPerHead = leaderOpt?.price ?? 0;
 
-  if (leaderAccommodationId === "no-accommodation") {
-    total += leaderDiscountPer * leaders;
-  }
+  // price is “per head for a short package”; multiply by packageWeeks
+  const studentAdj = studentPerHead * packageWeeks * students;
+  const leaderAdj = leaderPerHead * packageWeeks * leaders; // or payingLeaders if you prefer
 
-  // return a negative number to represent a discount
-  return -total;
+  return studentAdj + leaderAdj; // can be negative or positive
 }

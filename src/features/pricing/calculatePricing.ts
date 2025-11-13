@@ -4,7 +4,7 @@ import {
   AirportCode,
   Overrides,
 } from "@/types/types";
-import { getEffectiveRates } from "./pricingUtils";
+import { getEffectiveRates, computeAccommodationAdjustment } from "./pricingUtils";
 
 export type PricingResult = {
   currency: string;
@@ -38,6 +38,7 @@ export type PricingResult = {
     perFewerNight: number;
     perExtraLesson: number;
     perFewerLesson: number;
+    accommodationAdjustment: number;
   };
 };
 
@@ -51,13 +52,15 @@ type CalculatePricingArgs = {
   baseNights: number;
   lessonsPerWeek: number;
   weeks: number;
-  inferredWeeks: number;
-  arrivalAirport: AirportCode;
-  departureAirport: AirportCode;
-  selectedActivities: SelectedActivities;
-  selectedBusCards: SelectedBusCards;
-  customItems: CustomItem[];
+  // inferredWeeks: number;
+  // arrivalAirport: AirportCode;
+  // departureAirport: AirportCode;
+  // selectedActivities: SelectedActivities;
+  // selectedBusCards: SelectedBusCards;
+  // customItems: CustomItem[];
   overrides: Overrides;
+  studentAccommodationId: string | null;
+  leaderAccommodationId: string | null;
 };
 
 export function calculatePricing({
@@ -71,7 +74,9 @@ export function calculatePricing({
   baseNights,
   lessonsPerWeek,
   weeks,
-  inferredWeeks,
+  // inferredWeeks,
+  studentAccommodationId,
+  leaderAccommodationId,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -104,7 +109,7 @@ export function calculatePricing({
   // 13/14 nights = 2 "weeks" → 40 base lessons
   const includedLessons = packageKey === "6n7d" || packageKey === "7n8d" ? 20 : 40;
   const totalLessons = lessonsPerWeek;
-  const effectiveWeeks = weeks || inferredWeeks;
+  const effectiveWeeks = weeks;
   const lessonDelta = totalLessons - includedLessons;
 
   const lessonAdjPerStudent =
@@ -121,8 +126,18 @@ export function calculatePricing({
   const coreStudentsAndPayingLeadersTotal =
     perStudentCore * studentsAndPayingLeaders;
 
+  // 6) Accommodation suuplement/discount
+  const accommodationAdjustment = computeAccommodationAdjustment(
+  loc,
+  packageKey,
+  students,
+  leaders,
+  studentAccommodationId,
+  leaderAccommodationId
+);
+
   // For now, grandTotal is just the core (we'll add extras later)
-  const grandTotal = coreStudentsAndPayingLeadersTotal;
+  const grandTotal = coreStudentsAndPayingLeadersTotal + accommodationAdjustment;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 
@@ -132,6 +147,7 @@ export function calculatePricing({
     payingLeaders,
     studentsAndPayingLeaders,
     coreStudentsAndPayingLeadersTotal,
+    grandTotal,
     perStudentAllIn,
     meta: {
       basePerStudent,
@@ -146,6 +162,7 @@ export function calculatePricing({
       perFewerNight,
       perExtraLesson,
       perFewerLesson,
+      accommodationAdjustment,
     },
   };
 }

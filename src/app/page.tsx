@@ -133,7 +133,9 @@ export default function QuoteCalculatorPage() {
         baseNights,
         lessonsPerWeek,
         weeks,
-        inferredWeeks,
+        // inferredWeeks,
+        studentAccommodationId,
+        leaderAccommodationId,
       }),
     [
       loc,
@@ -146,7 +148,9 @@ export default function QuoteCalculatorPage() {
       baseNights,
       lessonsPerWeek,
       weeks,
-      inferredWeeks,
+      // inferredWeeks,
+      studentAccommodationId,
+      leaderAccommodationId,
     ]
   );
 
@@ -558,7 +562,7 @@ export default function QuoteCalculatorPage() {
                 label="Grand total"
                 // value={fmt(pricing.grandTotal, pricing.currency)}
                 value={fmt(
-                  pricing.coreStudentsAndPayingLeadersTotal,
+                  pricing.grandTotal,
                   pricing.currency
                 )}
                 strong

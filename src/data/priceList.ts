@@ -190,7 +190,7 @@ export const priceList: PriceList = {
           id: "no-accommodation",
           name: "No accommodation",
           unit: "perStudent",
-          price: 0,
+          price: -215,
         },
       ],
       accommodationLeaders: [
@@ -204,7 +204,7 @@ export const priceList: PriceList = {
           id: "no-accommodation",
           name: "No accommodation",
           unit: "perLeader",
-          price: 0,
+          price: -245,
         },
       ],
     },
