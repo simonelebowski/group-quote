@@ -47,6 +47,7 @@ export type AccommodationOption = {
 };
 
 export type AirportCode =
+  | "LGW or LHR"
   | "LGW"
   | "LHR"
   | "LTN"

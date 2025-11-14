@@ -9,11 +9,12 @@ export default function AirportSelect({
   onChange: (a: AirportCode) => void;
 }) {
   const opts: { code: AirportCode; name: string }[] = [
-    { code: "LGW", name: "Gatwick (LGW)" },
-    { code: "LHR", name: "Heathrow (LHR)" },
-    { code: "LTN", name: "Luton (LTN)" },
-    { code: "STN", name: "Stansted (STN)" },
-    { code: "LCY", name: "London City (LCY)" },
+    { code: "LGW or LHR", name: "LGW or LHR"},
+    { code: "LGW", name: "Gatwick" },
+    { code: "LHR", name: "Heathrow" },
+    { code: "LTN", name: "Luton" },
+    { code: "STN", name: "Stansted" },
+    { code: "LCY", name: "London City" },
     { code: "OTHER", name: "Other" },
   ];
   return (

@@ -63,6 +63,9 @@ export default function QuoteCalculatorPage() {
   const [toDate, setToDate] = useState<string>("");
   const [packageKey, setPackageKey] = useState<PackageKey>("7n8d");
   const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
+  const [customNights, setCustomNights] = useState<number | "">("");
+  const [lessonsPerWeek, setLessonsPerWeek] = useState<number>(20);
+  const [weeks, setWeeks] = useState<number>(1);
 
   // ACCOMMODATION VARIABLES
   const [studentAccommodationId, setStudentAccommodationId] = useState<
@@ -82,11 +85,11 @@ export default function QuoteCalculatorPage() {
   const leaderAccTotal =
   leaderAcc ? leaderAcc.price * packageWeeks * leaders : 0;
 
-  const [customNights, setCustomNights] = useState<number | "">("");
-  const [lessonsPerWeek, setLessonsPerWeek] = useState<number>(20);
-  const [weeks, setWeeks] = useState<number>(1);
+  // TRANSFERS VARIABLES
   const [arrivalAirport, setArrivalAirport] = useState<AirportCode>("LGW");
   const [departureAirport, setDepartureAirport] = useState<AirportCode>("LGW");
+
+  // ACTIVITIES & BUS VARIABLES
   const [selectedActivities, setSelectedActivities] = useState<
     Record<string, number>
   >({});

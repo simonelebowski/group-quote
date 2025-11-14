@@ -21,6 +21,7 @@ export const priceList: PriceList = {
       transfer: {
         includedAirports: ["LGW", "LHR"],
         supplements: {
+          LGW or LHR: { unit: "perStudent", price: 0 },
           LGW: { unit: "perStudent", price: 0 },
           LHR: { unit: "perStudent", price: 0 },
           LTN: { unit: "perStudent", price: 20 },
