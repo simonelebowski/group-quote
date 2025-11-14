@@ -61,13 +61,27 @@ export default function QuoteCalculatorPage() {
   const [groupName, setGroupName] = useState<string>("");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
+  const [packageKey, setPackageKey] = useState<PackageKey>("7n8d");
+  const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
+
+  // ACCOMMODATION VARIABLES
   const [studentAccommodationId, setStudentAccommodationId] = useState<
     string | null
   >(null);
   const [leaderAccommodationId, setLeaderAccommodationId] = useState<
     string | null
   >(null);
-  const [packageKey, setPackageKey] = useState<PackageKey>("7n8d");
+  const studentAcc = loc.accommodationStudents.find(
+  (a) => a.id === studentAccommodationId
+);
+  const leaderAcc = loc.accommodationLeaders.find(
+  (a) => a.id === leaderAccommodationId
+);
+  const studentAccTotal =
+  studentAcc ? studentAcc.price * packageWeeks * students : 0;
+  const leaderAccTotal =
+  leaderAcc ? leaderAcc.price * packageWeeks * leaders : 0;
+
   const [customNights, setCustomNights] = useState<number | "">("");
   const [lessonsPerWeek, setLessonsPerWeek] = useState<number>(20);
   const [weeks, setWeeks] = useState<number>(1);
@@ -440,18 +454,18 @@ export default function QuoteCalculatorPage() {
               />
 
               {pricing.meta.lessonDelta !== 0 && (
-  <Row
-    label={`Lesson adjustment per student (${
-      pricing.meta.lessonDelta > 0 ? "+" : "-"
-    }${Math.abs(pricing.meta.lessonDelta)} lesson${
-      Math.abs(pricing.meta.lessonDelta) !== 1 ? "s" : ""
-    })`}
-    value={fmt(
-      pricing.meta.lessonAdjPerStudent,
-      pricing.currency
-    )}
-  />
-)}
+                <Row
+                  label={`Lesson adjustment per student (${
+                    pricing.meta.lessonDelta > 0 ? "+" : "-"
+                    }${Math.abs(pricing.meta.lessonDelta)} lesson${
+                    Math.abs(pricing.meta.lessonDelta) !== 1 ? "s" : ""
+                  })`}
+                  value={fmt(
+                    pricing.meta.lessonAdjPerStudent,
+                    pricing.currency
+                  )}
+                />
+              )}
               {/* <Row
                 label="Weeks (included lessons)"
                 value={`${pricing.meta.effectiveWeeks} (${pricing.meta.includedLessons})`}
@@ -476,19 +490,6 @@ export default function QuoteCalculatorPage() {
                   value={fmt(pricing.meta.nightAdjPerStudent, pricing.currency)}
                 />
               )}
-              {pricing.meta.lessonDelta !== 0 && (
-                <Row
-                  label={`Lesson adjustment per student (${
-                    pricing.meta.lessonDelta > 0 ? "+" : "-"
-                  }${Math.abs(pricing.meta.lessonDelta)} lesson${
-                    Math.abs(pricing.meta.lessonDelta) !== 1 ? "s" : ""
-                  })`}
-                  value={fmt(
-                    pricing.meta.lessonAdjPerStudent,
-                    pricing.currency
-                  )}
-                />
-              )}
               {/* {pricing.meta.transferPerStudent !== 0 && (
                 <Row
                   label={`Transfer supplement per student`}
@@ -509,6 +510,20 @@ export default function QuoteCalculatorPage() {
                   pricing.currency
                 )}
               />
+
+{studentAccTotal !== 0 && studentAcc && (
+  <Row
+    label={`${studentAcc.name} × ${students}`}
+    value={fmt(studentAccTotal, pricing.currency)}
+  />
+)}
+
+{leaderAccTotal !== 0 && leaderAcc && (
+  <Row
+    label={`${leaderAcc.name} × ${leaders}`}
+    value={fmt(leaderAccTotal, pricing.currency)}
+  />
+)}
               {/*        {pricing.activitiesBreakdown.length > 0 && (
                 <div className="mt-2">
                   <div className="mb-1 font-medium">Activities</div>
