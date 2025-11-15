@@ -4,6 +4,7 @@ import {
   Currency,
   Unit,
   AirportCode,
+  TransferOptionId,
   PackageKey,
   ActivityPick,
 } from "@/types/types";
@@ -75,19 +76,27 @@ export default function QuoteCalculatorPage() {
     string | null
   >(null);
   const studentAcc = loc.accommodationStudents.find(
-  (a) => a.id === studentAccommodationId
-);
+    (a) => a.id === studentAccommodationId
+  );
   const leaderAcc = loc.accommodationLeaders.find(
-  (a) => a.id === leaderAccommodationId
-);
-  const studentAccTotal =
-  studentAcc ? studentAcc.price * packageWeeks * students : 0;
-  const leaderAccTotal =
-  leaderAcc ? leaderAcc.price * packageWeeks * leaders : 0;
+    (a) => a.id === leaderAccommodationId
+  );
+  const studentAccTotal = studentAcc
+    ? studentAcc.price * packageWeeks * students
+    : 0;
+  const leaderAccTotal = leaderAcc
+    ? leaderAcc.price * packageWeeks * leaders
+    : 0;
 
   // TRANSFERS VARIABLES
-  const [arrivalAirport, setArrivalAirport] = useState<AirportCode>("LGW");
-  const [departureAirport, setDepartureAirport] = useState<AirportCode>("LGW");
+  // const [arrivalAirport, setArrivalAirport] = useState<AirportCode>("LGW");
+  // const [departureAirport, setDepartureAirport] = useState<AirportCode>("LGW");
+
+  const [arrivalTransferOptionId, setArrivalTransferOptionId] =
+    useState<TransferOptionId>("lgw_or_lhr");
+
+  const [departureTransferOptionId, setDepartureTransferOptionId] =
+    useState<TransferOptionId>("lgw_or_lhr");
 
   // ACTIVITIES & BUS VARIABLES
   const [selectedActivities, setSelectedActivities] = useState<
@@ -153,6 +162,8 @@ export default function QuoteCalculatorPage() {
         // inferredWeeks,
         studentAccommodationId,
         leaderAccommodationId,
+        arrivalTransferOptionId,
+        departureTransferOptionId,
       }),
     [
       loc,
@@ -168,6 +179,8 @@ export default function QuoteCalculatorPage() {
       // inferredWeeks,
       studentAccommodationId,
       leaderAccommodationId,
+      arrivalTransferOptionId,
+      departureTransferOptionId,
     ]
   );
 
@@ -420,16 +433,34 @@ export default function QuoteCalculatorPage() {
           inferredWeeks={inferredWeeks}
           lessonsPerWeek={lessonsPerWeek}
           setLessonsPerWeek={setLessonsPerWeek}
-          arrivalAirport={arrivalAirport}
-          setArrivalAirport={setArrivalAirport}
-          departureAirport={departureAirport}
-          setDepartureAirport={setDepartureAirport}
+          arrivalTransferOptionId={arrivalTransferOptionId}
+          setArrivalTransferOptionId={setArrivalTransferOptionId}
+          departureTransferOptionId={departureTransferOptionId}
+          setDepartureTransferOptionId={setDepartureTransferOptionId}
+          // arrivalAirport={arrivalAirport}
+          // setArrivalAirport={setArrivalAirport}
+          // departureAirport={departureAirport}
+          // setDepartureAirport={setDepartureAirport}
           loc={loc}
         />
 
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <ActivitiesCard loc={loc} selectedActivities={selectedActivities} setSelectedActivities={setSelectedActivities} unitLabel={unitLabel} fmt={fmt} />
-          <BusExtras loc={loc} selectedBusCards={selectedBusCards} setSelectedBusCards={setSelectedBusCards} customItems={customItems} setCustomItems={setCustomItems} unitLabel={unitLabel} fmt={fmt} />
+          <ActivitiesCard
+            loc={loc}
+            selectedActivities={selectedActivities}
+            setSelectedActivities={setSelectedActivities}
+            unitLabel={unitLabel}
+            fmt={fmt}
+          />
+          <BusExtras
+            loc={loc}
+            selectedBusCards={selectedBusCards}
+            setSelectedBusCards={setSelectedBusCards}
+            customItems={customItems}
+            setCustomItems={setCustomItems}
+            unitLabel={unitLabel}
+            fmt={fmt}
+          />
         </div>
 
         {/* Summary */}
@@ -460,7 +491,7 @@ export default function QuoteCalculatorPage() {
                 <Row
                   label={`Lesson adjustment per student (${
                     pricing.meta.lessonDelta > 0 ? "+" : "-"
-                    }${Math.abs(pricing.meta.lessonDelta)} lesson${
+                  }${Math.abs(pricing.meta.lessonDelta)} lesson${
                     Math.abs(pricing.meta.lessonDelta) !== 1 ? "s" : ""
                   })`}
                   value={fmt(
@@ -514,19 +545,19 @@ export default function QuoteCalculatorPage() {
                 )}
               />
 
-{studentAccTotal !== 0 && studentAcc && (
-  <Row
-    label={`${studentAcc.name} × ${students}`}
-    value={fmt(studentAccTotal, pricing.currency)}
-  />
-)}
+              {studentAccTotal !== 0 && studentAcc && (
+                <Row
+                  label={`${studentAcc.name} × ${students}`}
+                  value={fmt(studentAccTotal, pricing.currency)}
+                />
+              )}
 
-{leaderAccTotal !== 0 && leaderAcc && (
-  <Row
-    label={`${leaderAcc.name} × ${leaders}`}
-    value={fmt(leaderAccTotal, pricing.currency)}
-  />
-)}
+              {leaderAccTotal !== 0 && leaderAcc && (
+                <Row
+                  label={`${leaderAcc.name} × ${leaders}`}
+                  value={fmt(leaderAccTotal, pricing.currency)}
+                />
+              )}
               {/*        {pricing.activitiesBreakdown.length > 0 && (
                 <div className="mt-2">
                   <div className="mb-1 font-medium">Activities</div>
@@ -579,10 +610,7 @@ export default function QuoteCalculatorPage() {
               <Row
                 label="Grand total"
                 // value={fmt(pricing.grandTotal, pricing.currency)}
-                value={fmt(
-                  pricing.grandTotal,
-                  pricing.currency
-                )}
+                value={fmt(pricing.grandTotal, pricing.currency)}
                 strong
               />
               <Row

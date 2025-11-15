@@ -4,10 +4,14 @@ import AirportSelect from "./AirportSelect";
 import Select from "./Select";
 
 export default function TransfersCard({
-  arrivalAirport,
-  setArrivalAirport,
-  departureAirport,
-  setDepartureAirport,
+  // arrivalAirport,
+  // setArrivalAirport,
+  // departureAirport,
+  // setDepartureAirport,
+  arrivalTransferOptionId,
+  setArrivalTransferOptionId,
+  departureTransferOptionId,
+  setDepartureTransferOptionId,
   loc,
   studentAccommodationId,
   setStudentAccommodationId,
@@ -54,21 +58,26 @@ export default function TransfersCard({
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div>
           <Label>Arrival Airport</Label>
-          <AirportSelect value={arrivalAirport} onChange={setArrivalAirport} />
+          <AirportSelect
+            value={arrivalTransferOptionId}
+            onChange={setArrivalTransferOptionId}
+            options={loc.transfer.options}
+          />
         </div>
         <div>
           <Label>Departure Airport</Label>
           <AirportSelect
-            value={departureAirport}
-            onChange={setDepartureAirport}
+            value={departureTransferOptionId}
+            onChange={setDepartureTransferOptionId}
+            options={loc.transfer.options}
           />
         </div>
       </div>
-      <p className="mt-2 text-xs text-neutral-600">
+      {/* <p className="mt-2 text-xs text-neutral-600">
         {loc.transfer.includedAirports.join(" / ")} included. Others add a
         supplement per way. You can override supplements in the Admin panel
         below.
-      </p>
+      </p> */}
     </Card>
   );
 }

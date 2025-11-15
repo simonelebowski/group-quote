@@ -1,22 +1,24 @@
-import { AirportCode } from "@/types/types";
+import { AirportCode, TransferOptionId, TransferOption } from "@/types/types";
 import Select from "./Select";
 
 export default function AirportSelect({
   value,
   onChange,
+  options,
 }: {
-  value: AirportCode;
-  onChange: (a: AirportCode) => void;
+  value: TransferOptionId;
+  onChange: (a: TransferOptionId) => void;
+  // options: TransferOption;
 }) {
-  const opts: { code: AirportCode; name: string }[] = [
-    { code: "LGW or LHR", name: "LGW or LHR"},
-    { code: "LGW", name: "Gatwick" },
-    { code: "LHR", name: "Heathrow" },
-    { code: "LTN", name: "Luton" },
-    { code: "STN", name: "Stansted" },
-    { code: "LCY", name: "London City" },
-    { code: "OTHER", name: "Other" },
-  ];
+  // const opts: { code: AirportCode; name: string }[] = [
+  //   { code: "LGW or LHR", name: "LGW or LHR"},
+  //   { code: "LGW", name: "Gatwick" },
+  //   { code: "LHR", name: "Heathrow" },
+  //   { code: "LTN", name: "Luton" },
+  //   { code: "STN", name: "Stansted" },
+  //   { code: "LCY", name: "London City" },
+  //   { code: "OTHER", name: "Other" },
+  // ];
   return (
     // <Select value={value} setValue={onChange} options={opts} />
     <select
@@ -36,10 +38,10 @@ export default function AirportSelect({
         "[&::-ms-expand]:hidden",
       ].join(" ")}
       value={value}
-      onChange={(e) => onChange(e.target.value as AirportCode)}
+      onChange={(e) => onChange(e.target.value as TransferOptionId)}
     >
-      {opts.map((o) => (
-        <option key={o.code} value={o.code}>
+      {options.map((o) => (
+        <option key={o.id} value={o.id}>
           {o.name}
         </option>
       ))}

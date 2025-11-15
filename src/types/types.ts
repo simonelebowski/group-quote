@@ -8,7 +8,7 @@ export type Unit =
   | "perPerson"
   | "flat";
 
-export type ActivityCategory = 
+export type ActivityCategory =
   | "afternoon"
   | "evening"
   | "halfDay"
@@ -23,7 +23,7 @@ export type Activity = {
   price: number; // price in base currency
   description?: string;
   qty?: number;
-  category: ActivityCategory; 
+  category: ActivityCategory;
 };
 
 export type ActivityPick = {
@@ -47,7 +47,7 @@ export type AccommodationOption = {
 };
 
 export type AirportCode =
-  | "LGW or LHR"
+  | "LGW_OR_LHR"
   | "LGW"
   | "LHR"
   | "LTN"
@@ -55,10 +55,30 @@ export type AirportCode =
   | "LCY"
   | "OTHER";
 
-export type TransferRule = {
-  includedAirports: AirportCode[]; // transfers included at no extra cost
-  supplements: Record<AirportCode, { unit: Unit; price: number }>; // surcharge if not included
+export type TransferOptionId =
+  | "lgw_or_lhr"
+  | "lgw"
+  | "lhr"
+  | "ltn"
+  | "stn"
+  | "lcy"
+  | "other";
+
+export type TransferOption = {
+  id: TransferOptionId;
+  name: string;
+  unit: Unit; // probably "perStudent"
+  price: number; // supplement per student (arrival or departure)
 };
+
+export type TransferRule = {
+  options: TransferOption[];
+};
+
+// export type TransferRule = {
+//   includedAirports: AirportCode[]; // transfers included at no extra cost
+//   supplements: Record<AirportCode, { unit: Unit; price: number }>; // surcharge if not included
+// };
 
 export type PackageKey = "6n7d" | "7n8d" | "13n14d" | "14n15d";
 

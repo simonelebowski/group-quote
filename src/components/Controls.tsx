@@ -32,10 +32,14 @@ export default function Controls({
   inferredWeeks,
   lessonsPerWeek,
   setLessonsPerWeek,
-  arrivalAirport,
-  setArrivalAirport,
-  departureAirport,
-  setDepartureAirport,
+  // arrivalAirport,
+  // setArrivalAirport,
+  // departureAirport,
+  // setDepartureAirport,
+  arrivalTransferOptionId,
+  setArrivalTransferOptionId,
+  departureTransferOptionId,
+  setDepartureTransferOptionId,
   loc,
 }) {
   return (
@@ -73,10 +77,14 @@ export default function Controls({
       />
 
       <TransfersCard
-        arrivalAirport={arrivalAirport}
-        setArrivalAirport={setArrivalAirport}
-        departureAirport={departureAirport}
-        setDepartureAirport={setDepartureAirport}
+        // arrivalAirport={arrivalAirport}
+        // setArrivalAirport={setArrivalAirport}
+        // departureAirport={departureAirport}
+        // setDepartureAirport={setDepartureAirport}
+        arrivalTransferOptionId={arrivalTransferOptionId}
+        setArrivalTransferOptionId={setArrivalTransferOptionId}
+        departureTransferOptionId={departureTransferOptionId}
+        setDepartureTransferOptionId={setDepartureTransferOptionId}
         loc={loc}
         studentAccommodationId={studentAccommodationId}
         setStudentAccommodationId={setStudentAccommodationId}

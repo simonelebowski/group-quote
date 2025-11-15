@@ -1,6 +1,11 @@
 // FOR NOW I'M NOT SPLITTING THE MAIN FUNCTION
 
-import { LocationPricing, PackageKey, LocationOverride } from "@/types/types";
+import {
+  LocationPricing,
+  PackageKey,
+  LocationOverride,
+  TransferOptionId,
+} from "@/types/types";
 
 export function getEffectiveRates(
   loc: LocationPricing,
@@ -55,8 +60,7 @@ export function computeAccommodationAdjustment(
   leaderAccommodationId: string | null
 ): number {
   // 6/7 nights → 1 “unit”, 13/14 nights → 2 “units”
-  const packageWeeks =
-    packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
+  const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
 
   // find selected options; fall back to first option if something is missing
   const studentOpt =
@@ -75,4 +79,30 @@ export function computeAccommodationAdjustment(
   const leaderAdj = leaderPerHead * packageWeeks * leaders; // or payingLeaders if you prefer
 
   return studentAdj + leaderAdj; // can be negative or positive
+}
+
+export function getTransferTotal(
+  loc: LocationPricing,
+  arrivalId: TransferOptionId,
+  departureId: TransferOptionId,
+  students: number,
+  leaders: number
+): number {
+  const findPrice = (id: string): number => {
+    const opt = loc.transfer.options.find((o) => o.id === id);
+    return opt?.price ?? 0;
+  };
+
+  loc.transfer.options.forEach((opt) => console.log(opt.id));
+
+  const arrivalPrice = findPrice(arrivalId);
+  const departurePrice = findPrice(departureId);
+
+  const arrivalTotal = arrivalPrice * (students + leaders);
+  const departureTotal = departurePrice * (students + leaders);
+
+  // price is per person, per direction
+  console.log(arrivalId);
+  console.log(departureId);
+  return arrivalTotal + departureTotal;
 }

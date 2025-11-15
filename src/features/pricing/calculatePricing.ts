@@ -1,10 +1,14 @@
 import {
   PackageKey,
   LocationPricing,
-  AirportCode,
+  TransferOptionId,
   Overrides,
 } from "@/types/types";
-import { getEffectiveRates, computeAccommodationAdjustment } from "./pricingUtils";
+import {
+  getEffectiveRates,
+  computeAccommodationAdjustment,
+  getTransferTotal,
+} from "./pricingUtils";
 
 export type PricingResult = {
   currency: string;
@@ -53,8 +57,8 @@ type CalculatePricingArgs = {
   lessonsPerWeek: number;
   weeks: number;
   // inferredWeeks: number;
-  // arrivalAirport: AirportCode;
-  // departureAirport: AirportCode;
+  arrivalAirportId: TransferOptionId;
+  departureAirportId: TransferOptionId;
   // selectedActivities: SelectedActivities;
   // selectedBusCards: SelectedBusCards;
   // customItems: CustomItem[];
@@ -77,6 +81,8 @@ export function calculatePricing({
   // inferredWeeks,
   studentAccommodationId,
   leaderAccommodationId,
+  arrivalTransferOptionId,
+  departureTransferOptionId,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -101,13 +107,14 @@ export function calculatePricing({
       ? 0
       : nightDelta > 0
       ? nightDelta * perExtraNight
-      : nightDelta * perFewerLesson
-      // : Math.abs(nightDelta) * perFewerNight;
+      : nightDelta * perFewerLesson;
+  // : Math.abs(nightDelta) * perFewerNight;
 
   // 4) Lessons based on package key
   // 6/7 nights = 1 "week" → 20 base lessons
   // 13/14 nights = 2 "weeks" → 40 base lessons
-  const includedLessons = packageKey === "6n7d" || packageKey === "7n8d" ? 20 : 40;
+  const includedLessons =
+    packageKey === "6n7d" || packageKey === "7n8d" ? 20 : 40;
   const totalLessons = lessonsPerWeek;
   const effectiveWeeks = weeks;
   const lessonDelta = totalLessons - includedLessons;
@@ -126,18 +133,28 @@ export function calculatePricing({
   const coreStudentsAndPayingLeadersTotal =
     perStudentCore * studentsAndPayingLeaders;
 
-  // 6) Accommodation suuplement/discount
+  // 6) Accommodation supplement/discount
   const accommodationAdjustment = computeAccommodationAdjustment(
-  loc,
-  packageKey,
-  students,
-  leaders,
-  studentAccommodationId,
-  leaderAccommodationId
-);
+    loc,
+    packageKey,
+    students,
+    leaders,
+    studentAccommodationId,
+    leaderAccommodationId
+  );
+
+  // 7) Transfer
+  const transferTotal = getTransferTotal(
+    loc,
+    arrivalTransferOptionId,
+    departureTransferOptionId,
+    students,
+    leaders
+  );
 
   // For now, grandTotal is just the core (we'll add extras later)
-  const grandTotal = coreStudentsAndPayingLeadersTotal + accommodationAdjustment;
+  const grandTotal =
+    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 
