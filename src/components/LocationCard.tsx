@@ -4,6 +4,31 @@ import Label from "./Label";
 import Select from "./Select";
 import Input from "./Input";
 
+type LocationCardProps = {
+  locationId: string;
+  setLocationId: (value: string) => void;
+
+  students: number;
+  setStudents: (value: number) => void;
+
+  leaders: number;
+  setLeaders: (value: number) => void;
+
+  freeLeaders: number;
+  setFreeLeaders: (value: number) => void;
+
+  groupName: string | null;
+  setGroupName: (value: string) => void;
+
+  fromDate: string | null;
+  setFromDate: (value: string | null) => void;
+
+  toDate: string | null;
+  setToDate: (value: string | null) => void;
+
+  clamp: (value: number, min: number, max: number) => number;
+};
+
 export default function LocationCard({
   locationId,
   setLocationId,
@@ -20,7 +45,7 @@ export default function LocationCard({
   setFromDate,
   toDate,
   setToDate,
-}) {
+}: LocationCardProps) {
   return (
     <Card>
       <h2 className="mb-3 text-lg font-semibold">1) Group</h2>

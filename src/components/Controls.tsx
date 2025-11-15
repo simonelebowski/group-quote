@@ -1,6 +1,56 @@
 import LocationCard from "./LocationCard";
 import DurationCard from "./DurationCard";
 import TransfersCard from "./TransfersCard";
+import { PackageKey, TransferOptionId, LocationPricing } from "@/types/types";
+
+type ControlsProps = {
+  locationId: string;
+  setLocationId: (value: string) => void;
+
+  students: number;
+  setStudents: (value: number) => void;
+
+  leaders: number;
+  setLeaders: (value: number) => void;
+
+  freeLeaders: number;
+  setFreeLeaders: (value: number) => void;
+
+  groupName: string | null;
+  setGroupName: (value: string) => void;
+
+  fromDate: string | null;
+  setFromDate: (value: string | null) => void;
+
+  toDate: string | null;
+  setToDate: (value: string | null) => void;
+
+  studentAccommodationId: string;
+  setStudentAccommodationId: (value: string) => void;
+
+  leaderAccommodationId: string;
+  setLeaderAccommodationId: (value: string) => void;
+
+  clamp: (value: number, min: number, max: number) => number;
+
+  packageKey: PackageKey;
+  setPackageKey: (value: PackageKey) => void;
+
+  baseNights: number;
+  customNights: number | "";
+  setCustomNights: (value: number | "") => void;
+
+  lessonsPerWeek: number;
+  setLessonsPerWeek: (value: number) => void;
+
+  arrivalTransferOptionId: TransferOptionId;
+  setArrivalTransferOptionId: (value: TransferOptionId) => void;
+
+  departureTransferOptionId: TransferOptionId;
+  setDepartureTransferOptionId: (value: TransferOptionId) => void;
+
+  loc: LocationPricing;
+};
 
 export default function Controls({
   locationId,
@@ -27,21 +77,14 @@ export default function Controls({
   baseNights,
   customNights,
   setCustomNights,
-  weeks,
-  setWeeks,
-  inferredWeeks,
   lessonsPerWeek,
   setLessonsPerWeek,
-  // arrivalAirport,
-  // setArrivalAirport,
-  // departureAirport,
-  // setDepartureAirport,
   arrivalTransferOptionId,
   setArrivalTransferOptionId,
   departureTransferOptionId,
   setDepartureTransferOptionId,
   loc,
-}) {
+}: ControlsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       <LocationCard
@@ -69,18 +112,11 @@ export default function Controls({
         customNights={customNights}
         setCustomNights={setCustomNights}
         clamp={clamp}
-        // weeks={weeks}
-        // setWeeks={setWeeks}
-        // inferredWeeks={inferredWeeks}
         lessonsPerWeek={lessonsPerWeek}
         setLessonsPerWeek={setLessonsPerWeek}
       />
 
       <TransfersCard
-        // arrivalAirport={arrivalAirport}
-        // setArrivalAirport={setArrivalAirport}
-        // departureAirport={departureAirport}
-        // setDepartureAirport={setDepartureAirport}
         arrivalTransferOptionId={arrivalTransferOptionId}
         setArrivalTransferOptionId={setArrivalTransferOptionId}
         departureTransferOptionId={departureTransferOptionId}

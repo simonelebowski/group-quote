@@ -428,19 +428,12 @@ export default function QuoteCalculatorPage() {
           baseNights={baseNights}
           customNights={customNights}
           setCustomNights={setCustomNights}
-          weeks={weeks}
-          setWeeks={setWeeks}
-          inferredWeeks={inferredWeeks}
           lessonsPerWeek={lessonsPerWeek}
           setLessonsPerWeek={setLessonsPerWeek}
           arrivalTransferOptionId={arrivalTransferOptionId}
           setArrivalTransferOptionId={setArrivalTransferOptionId}
           departureTransferOptionId={departureTransferOptionId}
           setDepartureTransferOptionId={setDepartureTransferOptionId}
-          // arrivalAirport={arrivalAirport}
-          // setArrivalAirport={setArrivalAirport}
-          // departureAirport={departureAirport}
-          // setDepartureAirport={setDepartureAirport}
           loc={loc}
         />
 

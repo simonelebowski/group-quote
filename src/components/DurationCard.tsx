@@ -1,10 +1,11 @@
 import Card from "./Card";
 import Label from "./Label";
-import { PackageKey } from "@/types/types";
 import Select from "./Select";
 import Input from "./Input";
+import { PackageKey } from "@/types/types";
 
-const defaultLessonsForPackage = (pkg: PackageKey) => pkg === "13n14d" || pkg === "14n15d" ? 40 : 20;
+const defaultLessonsForPackage = (pkg: PackageKey) =>
+  pkg === "13n14d" || pkg === "14n15d" ? 40 : 20;
 
 export default function DurationCard({
   packageKey,
@@ -13,9 +14,6 @@ export default function DurationCard({
   customNights,
   setCustomNights,
   clamp,
-  // weeks,
-  // setWeeks,
-  // inferredWeeks,
   lessonsPerWeek,
   setLessonsPerWeek,
 }) {
@@ -26,10 +24,11 @@ export default function DurationCard({
       <Select
         value={packageKey}
         setValue={(v) => {
-          const next = v as PackageKey; 
-          setPackageKey(next); 
-          setCustomNights(''); 
-          setLessonsPerWeek(defaultLessonsForPackage(next))}}
+          const next = v as PackageKey;
+          setPackageKey(next);
+          setCustomNights("");
+          setLessonsPerWeek(defaultLessonsForPackage(next));
+        }}
         options={[
           { value: "6n7d", label: "6 nights / 7 days" },
           { value: "7n8d", label: "7 nights / 8 days" },
@@ -65,7 +64,7 @@ export default function DurationCard({
             clamp={clamp}
           />
           <p className="mt-1 text-xs text-neutral-600">
-              Adjusts ± per lesson if needed. 
+            Adjusts ± per lesson if needed.
           </p>
         </div>
       </div>

@@ -4,10 +4,6 @@ import AirportSelect from "./AirportSelect";
 import Select from "./Select";
 
 export default function TransfersCard({
-  // arrivalAirport,
-  // setArrivalAirport,
-  // departureAirport,
-  // setDepartureAirport,
   arrivalTransferOptionId,
   setArrivalTransferOptionId,
   departureTransferOptionId,
