@@ -17,14 +17,14 @@ type LocationCardProps = {
   freeLeaders: number;
   setFreeLeaders: (value: number) => void;
 
-  groupName: string | null;
+  groupName: string;
   setGroupName: (value: string) => void;
 
-  fromDate: string | null;
-  setFromDate: (value: string | null) => void;
+  fromDate: string;
+  setFromDate: (value: string) => void;
 
-  toDate: string | null;
-  setToDate: (value: string | null) => void;
+  toDate: string;
+  setToDate: (value: string) => void;
 
   clamp: (value: number, min: number, max: number) => number;
 };

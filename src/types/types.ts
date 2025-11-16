@@ -46,14 +46,14 @@ export type AccommodationOption = {
   price: number;
 };
 
-export type AirportCode =
-  | "LGW_OR_LHR"
-  | "LGW"
-  | "LHR"
-  | "LTN"
-  | "STN"
-  | "LCY"
-  | "OTHER";
+// export type AirportCode =
+//   | "LGW_OR_LHR"
+//   | "LGW"
+//   | "LHR"
+//   | "LTN"
+//   | "STN"
+//   | "LCY"
+//   | "OTHER";
 
 export type TransferOptionId =
   | "lgw_or_lhr"
@@ -67,8 +67,8 @@ export type TransferOptionId =
 export type TransferOption = {
   id: TransferOptionId;
   name: string;
-  unit: Unit; // probably "perStudent"
-  price: number; // supplement per student (arrival or departure)
+  unit: Unit;
+  price: number;
 };
 
 export type TransferRule = {

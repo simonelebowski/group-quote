@@ -1,5 +1,4 @@
-import { AirportCode, TransferOptionId, TransferOption } from "@/types/types";
-import Select from "./Select";
+import { TransferOptionId, TransferOption } from "@/types/types";
 
 export default function AirportSelect({
   value,
@@ -8,19 +7,9 @@ export default function AirportSelect({
 }: {
   value: TransferOptionId;
   onChange: (a: TransferOptionId) => void;
-  // options: TransferOption;
+  options: TransferOption[];
 }) {
-  // const opts: { code: AirportCode; name: string }[] = [
-  //   { code: "LGW or LHR", name: "LGW or LHR"},
-  //   { code: "LGW", name: "Gatwick" },
-  //   { code: "LHR", name: "Heathrow" },
-  //   { code: "LTN", name: "Luton" },
-  //   { code: "STN", name: "Stansted" },
-  //   { code: "LCY", name: "London City" },
-  //   { code: "OTHER", name: "Other" },
-  // ];
   return (
-    // <Select value={value} setValue={onChange} options={opts} />
     <select
       className={[
         "block",

@@ -1,5 +1,5 @@
 type NumberInputProps = {
-  value: number;
+  value: number | "";
   setValue: (value: number) => void;
   clamp: (value: number, min: number, max: number) => number;
   max?: number;

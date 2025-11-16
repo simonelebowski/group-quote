@@ -7,6 +7,21 @@ import { PackageKey } from "@/types/types";
 const defaultLessonsForPackage = (pkg: PackageKey) =>
   pkg === "13n14d" || pkg === "14n15d" ? 40 : 20;
 
+type DurationCardProps = {
+  packageKey: PackageKey;
+  setPackageKey: (value: PackageKey) => void;
+
+  baseNights: number;
+
+  customNights: number | "";
+  setCustomNights: (value: number | "") => void;
+
+  clamp: (value: number, min: number, max: number) => number;
+
+  lessonsPerWeek: number;
+  setLessonsPerWeek: (value: number) => void;
+};
+
 export default function DurationCard({
   packageKey,
   setPackageKey,
@@ -16,7 +31,7 @@ export default function DurationCard({
   clamp,
   lessonsPerWeek,
   setLessonsPerWeek,
-}) {
+}: DurationCardProps) {
   return (
     <Card>
       <h2 className="mb-3 text-lg font-semibold">2) Duration & Lessons</h2>

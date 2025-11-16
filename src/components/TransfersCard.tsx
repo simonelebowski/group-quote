@@ -2,6 +2,23 @@ import Card from "./Card";
 import Label from "./Label";
 import AirportSelect from "./AirportSelect";
 import Select from "./Select";
+import { TransferOptionId, LocationPricing } from "@/types/types";
+
+type TransfersCardProps = {
+  arrivalTransferOptionId: TransferOptionId;
+  setArrivalTransferOptionId: (value: TransferOptionId) => void;
+
+  departureTransferOptionId: TransferOptionId;
+  setDepartureTransferOptionId: (value: TransferOptionId) => void;
+
+  loc: LocationPricing;
+
+  studentAccommodationId: string;
+  setStudentAccommodationId: (value: string) => void;
+
+  leaderAccommodationId: string;
+  setLeaderAccommodationId: (value: string) => void;
+};
 
 export default function TransfersCard({
   arrivalTransferOptionId,
@@ -13,7 +30,7 @@ export default function TransfersCard({
   setStudentAccommodationId,
   leaderAccommodationId,
   setLeaderAccommodationId,
-}) {
+}: TransfersCardProps) {
   const studentAccommodationOptions = loc?.accommodationStudents ?? [];
   const leaderAccommodationOptions = loc?.accommodationLeaders ?? [];
 
