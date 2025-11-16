@@ -1,7 +1,18 @@
 import { useState, useMemo } from "react";
 import Card from "./Card";
 import ActivitySection from "./ActivitySection";
-import { Activity, ActivityCategory } from "@/types/types";
+import { LocationPricing, Activity, ActivityCategory } from "@/types/types";
+
+type ActivitiesCardProps = {
+  loc: LocationPricing;
+  // selectedActivities: SelectedActivities;
+  // setSelectedActivities: (
+  //   updater: (prev: SelectedActivities) => SelectedActivities
+  // ) => void;
+
+  unitLabel: (unit: string) => string;
+  fmt: (value: number, currency: string) => string;
+};
 
 export default function ActivitiesCard({
   loc,
