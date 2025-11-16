@@ -93,8 +93,6 @@ export function getTransferTotal(
     return opt?.price ?? 0;
   };
 
-  loc.transfer.options.forEach((opt) => console.log(opt.id));
-
   const arrivalPrice = findPrice(arrivalId);
   const departurePrice = findPrice(departureId);
 

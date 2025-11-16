@@ -234,16 +234,28 @@ export const priceList: PriceList = {
       perFewerNight: 55,
       perExtraLesson: 9,
       perFewerLesson: 9,
+      // transfer: {
+      //   includedAirports: ["LGW", "LHR"],
+      //   supplements: {
+      //     LGW: { unit: "perStudent", price: 0 },
+      //     LHR: { unit: "perStudent", price: 0 },
+      //     LTN: { unit: "perStudent", price: 20 },
+      //     STN: { unit: "perStudent", price: 20 },
+      //     LCY: { unit: "perStudent", price: 20 },
+      //     OTHER: { unit: "perStudent", price: 35 },
+      //   },
+      // },
       transfer: {
-        includedAirports: ["LGW", "LHR"],
-        supplements: {
-          LGW: { unit: "perStudent", price: 0 },
-          LHR: { unit: "perStudent", price: 0 },
-          LTN: { unit: "perStudent", price: 20 },
-          STN: { unit: "perStudent", price: 20 },
-          LCY: { unit: "perStudent", price: 20 },
-          OTHER: { unit: "perStudent", price: 35 },
-        },
+        // includedAirports: ["LGW", "LHR"],
+        options: [
+          { id: "lgw_or_lhr", name: "LGW or LHR", unit: "perPerson", price: 0 },
+          { id: "lgw", name: "Gatwick", unit: "perPerson", price: 0 },
+          { id: "lhr", name: "Heathrow", unit: "perPerson", price: 0 },
+          { id: "ltn", name: "Luton", unit: "perPerson", price: 20 },
+          { id: "stn", name: "Stansted", unit: "perPerson", price: 20 },
+          { id: "lcy", name: "City", unit: "perPerson", price: 20 },
+          { id: "other", name: "Other", unit: "perPerson", price: 20 },
+        ],
       },
       activities: [
         {
