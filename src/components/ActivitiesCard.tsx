@@ -3,15 +3,6 @@ import Card from "./Card";
 import ActivitySection from "./ActivitySection";
 import { Activity, ActivityCategory } from "@/types/types";
 
-const LABELS: Record<ActivityCategory, string> = {
-  afternoon: "Afternoon activities",
-  evening: "Evening activities",
-  halfDay: "Half-day tours",
-  halfDayExtras: "Half-day tours extras",
-  halfDayActivities: "Half-day activities",
-  fullDay: "Full-day tours",
-};
-
 export default function ActivitiesCard({
   loc,
   selectedActivities,

@@ -30,7 +30,7 @@ export default function ActivitySection({
       <button
         type="button"
         onClick={() => toggle(cat)}
-        className="flex w-full items-center justify-between px-3 py-2.5 text-left"
+        className="flex w-full items-center justify-between px-3 py-2.5 text-left cursor-pointer"
       >
         <div className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
           {LABELS[cat]}
@@ -50,10 +50,10 @@ export default function ActivitySection({
             return (
               <label
                 key={a.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-3 py-2 text-xs md:text-sm hover:bg-neutral-50"
+                className="flex flex-wrap items-center justify-between gap-3 px-3 py-2 text-xs md:text-sm hover:bg-neutral-50 cursor-pointer"
               >
                 {/* Left: checkbox + info */}
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-3 ">
                   <input
                     type="checkbox"
                     className="mt-1 h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900/20"
