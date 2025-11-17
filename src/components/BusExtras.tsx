@@ -17,7 +17,7 @@ export default function BusExtras({loc, selectedBusCards, setSelectedBusCards, c
             };
 
           return (
-            <div
+            <label
               key={b.id}
               className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-neutral-200 px-3 py-2 text-xs md:text-sm cursor-pointer"
             >
@@ -92,7 +92,7 @@ export default function BusExtras({loc, selectedBusCards, setSelectedBusCards, c
                   />
                 )}
               </div>
-            </div>
+            </label>
           );
         })}
       </div>
