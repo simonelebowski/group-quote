@@ -4,12 +4,14 @@ import {
   TransferOptionId,
   SelectedActivities,
   Overrides,
+  SelectedBusCards,
 } from "@/types/types";
 import {
   getEffectiveRates,
   computeAccommodationAdjustment,
   getTransferTotal,
   calculateActivitiesPricing,
+  calculateBusCardsPricing ,
 } from "./pricingUtils";
 
 export type PricingResult = {
@@ -22,6 +24,9 @@ export type PricingResult = {
 
   activitiesTotal: number;
   activitiesBreakdown: { label: string; total: number }[];
+
+  busCardsTotal: number;                    
+  busBreakdown: { label: string; total: number }[];
 
   grandTotal: number;
   perStudentAllIn: number | null;
@@ -71,7 +76,7 @@ type CalculatePricingArgs = {
   departureTransferOptionId: TransferOptionId;
 
   selectedActivities?: SelectedActivities;
-  // selectedBusCards: SelectedBusCards;
+  selectedBusCards: SelectedBusCards;
   // customItems: CustomItem[];
   overrides: Overrides;
   studentAccommodationId: string | null;
@@ -95,6 +100,7 @@ export function calculatePricing({
   arrivalTransferOptionId,
   departureTransferOptionId,
   selectedActivities,
+  selectedBusCards,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -166,16 +172,25 @@ export function calculatePricing({
 
   // 8) Activities 
   const { activitiesTotal, activitiesBreakdown } = calculateActivitiesPricing(
-  loc,
-  selectedActivities,
-  ov,
-  students,
-  leaders
-);
+    loc,
+    selectedActivities,
+    ov,
+    students,
+    leaders
+  );
+
+  // 9) Bus cards
+  const { busCardsTotal, busBreakdown } = calculateBusCardsPricing(
+    loc,
+    selectedBusCards,
+    ov,
+    students,
+    leaders
+  );
 
   // For now, grandTotal is just the core (we'll add extras later)
   const grandTotal =
-    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal;
+    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal + busCardsTotal;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 
@@ -187,6 +202,8 @@ export function calculatePricing({
     coreStudentsAndPayingLeadersTotal,
     activitiesTotal,
     activitiesBreakdown,
+    busCardsTotal,
+    busBreakdown,
     grandTotal,
     perStudentAllIn,
     meta: {

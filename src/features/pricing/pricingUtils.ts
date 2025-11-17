@@ -7,6 +7,8 @@ import {
   TransferOptionId,
   SelectedActivities,
   ActivitiesPricing,
+  SelectedBusCards, 
+  BusCardsPricing,
 } from "@/types/types";
 
 export function getEffectiveRates(
@@ -107,6 +109,7 @@ export function getTransferTotal(
   return arrivalTotal + departureTotal;
 }
 
+// ACTIVITIES--------------------------------------------------------------------------------------------------------------------
 export function calculateActivitiesPricing(
   loc: LocationPricing,
   selectedActivities: SelectedActivities,
@@ -194,4 +197,93 @@ export function calculateActivitiesPricing(
   });
 
   return { activitiesTotal, activitiesBreakdown };
+}
+
+// BUS CARDS--------------------------------------------------------------------------------------------------------------------
+export function calculateBusCardsPricing(
+  loc: LocationPricing,
+  selectedBusCards: SelectedBusCards | undefined,
+  ov: LocationOverride | {},
+  students: number,
+  leaders: number
+): BusCardsPricing {
+  let busCardsTotal = 0;
+  const busBreakdown: { label: string; total: number }[] = [];
+
+  if (!selectedBusCards) {
+    return { busCardsTotal, busBreakdown };
+  }
+
+  Object.entries(selectedBusCards).forEach(([id, sel]) => {
+    if (!sel || !sel.enabled) return;
+
+    const card = loc.busCards.find((b) => b.id === id);
+    if (!card) return;
+
+    const price = ov.busCards?.[id] ?? card.price;
+
+    let qty = 0;
+    let labelDetail = "";
+
+    switch (card.unit) {
+      case "perStudent": {
+        const max = students;
+        qty =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), max)
+            : max;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${qty} students)`
+            : `(all ${students} students)`;
+        break;
+      }
+
+      case "perLeader": {
+        const max = leaders;
+        qty =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), max)
+            : max;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${qty} leaders)`
+            : `(all ${leaders} leaders)`;
+        break;
+      }
+
+      case "perPerson": {
+        const max = students + leaders;
+        qty =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), max)
+            : max;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${qty} people)`
+            : "(whole group headcount)";
+        break;
+      }
+
+      case "perGroup":
+      case "flat":
+      case "perUnit":
+      default: {
+        // treat as price per group/unit
+        qty = sel.mode === "quantity" ? Math.max(sel.count || 0, 0) : 1;
+        labelDetail =
+          sel.mode === "quantity" && qty > 1 ? `(x${qty})` : "(per group)";
+        break;
+      }
+    }
+
+    const subtotal = price * qty;
+    busCardsTotal += subtotal;
+    busBreakdown.push({
+      label: `${card.name} ${labelDetail}`.trim(),
+      total: subtotal,
+    });
+  });
+
+  return { busCardsTotal, busBreakdown };
 }

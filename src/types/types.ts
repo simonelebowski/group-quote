@@ -56,6 +56,11 @@ export type BusSelection = {
 
 export type SelectedBusCards = Record<string, BusSelection>;
 
+export type BusCardsPricing = {
+  busCardsTotal: number;
+  busBreakdown: { label: string; total: number }[];
+};
+
 export type AccommodationOption = {
   id: string;
   name: string;
