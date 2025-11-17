@@ -133,6 +133,7 @@ export type CustomLineItem = {
   unit: Unit; // perStudent | perLeader | perGroup | flat
   qty: number;
   price: number; // per-unit per the unit above
+  mode?: "group" | "quantity" | "flat";
 };
 
 export type LocationOverride = {
