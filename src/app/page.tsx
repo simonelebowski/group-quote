@@ -6,6 +6,7 @@ import {
   TransferOptionId,
   PackageKey,
   SelectedActivities,
+  SelectedBusCards,
   ActivityPick,
 } from "@/types/types";
 import { priceList } from "@/data/priceList";
@@ -102,7 +103,7 @@ export default function QuoteCalculatorPage() {
   const [selectedActivities, setSelectedActivities] = useState<
     Record<string, number>
   >({});
-  const [selectedBusCards, setSelectedBusCards] = useState<SelectedActivities>({});
+  const [selectedBusCards, setSelectedBusCards] = useState<SelectedBusCards>({});
 
   // NEW: admin overrides + custom items
   const [editMode, setEditMode] = useState<boolean>(false);

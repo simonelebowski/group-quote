@@ -8,6 +8,7 @@ export type Unit =
   | "perPerson"
   | "flat";
 
+  // ACTIVITIES ----------------------------------------------------------------------------------------------------------------
 export type ActivityCategory =
   | "afternoon"
   | "evening"
@@ -39,12 +40,21 @@ export type ActivitiesPricing = {
   activitiesBreakdown: {label: string; total: number}[]
 }
 
+// BUS CARDS ----------------------------------------------------------------------------------------------------------------
 export type BusCardOption = {
   id: string;
   name: string; // e.g., "Zones 1-2 (weekly)"
   unit: Unit; // usually perStudent
   price: number;
 };
+
+export type BusSelection = {
+  enabled: boolean;
+  mode: "group" | "quantity";
+  count: number;
+};
+
+export type SelectedBusCards = Record<string, BusSelection>;
 
 export type AccommodationOption = {
   id: string;
