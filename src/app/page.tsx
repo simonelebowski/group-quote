@@ -3,9 +3,9 @@ import { useMemo, useState, useEffect } from "react";
 import {
   Currency,
   Unit,
-  AirportCode,
   TransferOptionId,
   PackageKey,
+  SelectedActivities,
   ActivityPick,
 } from "@/types/types";
 import { priceList } from "@/data/priceList";
@@ -102,9 +102,7 @@ export default function QuoteCalculatorPage() {
   const [selectedActivities, setSelectedActivities] = useState<
     Record<string, number>
   >({});
-  const [selectedBusCards, setSelectedBusCards] = useState<
-    Record<string, ActivityPick>
-  >({});
+  const [selectedBusCards, setSelectedBusCards] = useState<SelectedActivities>({});
 
   // NEW: admin overrides + custom items
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -164,6 +162,7 @@ export default function QuoteCalculatorPage() {
         leaderAccommodationId,
         arrivalTransferOptionId,
         departureTransferOptionId,
+        selectedActivities,
       }),
     [
       loc,
@@ -181,6 +180,7 @@ export default function QuoteCalculatorPage() {
       leaderAccommodationId,
       arrivalTransferOptionId,
       departureTransferOptionId,
+      selectedActivities,
     ]
   );
 
@@ -551,7 +551,15 @@ export default function QuoteCalculatorPage() {
                   value={fmt(leaderAccTotal, pricing.currency)}
                 />
               )}
-              {/*        {pricing.activitiesBreakdown.length > 0 && (
+
+              {pricing.meta.transferTotal !== 0 && (
+                <Row
+                  label="Transfer subtotal"
+                  value={fmt(pricing.meta.transferTotal, pricing.currency)}
+                />
+              )}
+
+              {pricing.activitiesBreakdown.length > 0 && (
                 <div className="mt-2">
                   <div className="mb-1 font-medium">Activities</div>
                   <div className="space-y-1">
@@ -565,7 +573,8 @@ export default function QuoteCalculatorPage() {
                   </div>
                 </div>
               )}
-              {pricing.busBreakdown.length > 0 && (
+
+            {/* {pricing.busBreakdown.length > 0 && ( 
                 <div className="mt-2">
                   <div className="mb-1 font-medium">Bus Cards</div>
                   <div className="space-y-1">
@@ -593,7 +602,9 @@ export default function QuoteCalculatorPage() {
                       ))}
                     </div>
                   </div>
-                )} */}
+                )} 
+*/}
+
             </div>
           </Card>
 

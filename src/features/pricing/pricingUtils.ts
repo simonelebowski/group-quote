@@ -5,6 +5,8 @@ import {
   PackageKey,
   LocationOverride,
   TransferOptionId,
+  SelectedActivities,
+  ActivitiesPricing,
 } from "@/types/types";
 
 export function getEffectiveRates(
@@ -103,4 +105,93 @@ export function getTransferTotal(
   console.log(arrivalId);
   console.log(departureId);
   return arrivalTotal + departureTotal;
+}
+
+export function calculateActivitiesPricing(
+  loc: LocationPricing,
+  selectedActivities: SelectedActivities,
+  ov: { activities?: Record<string, number>},
+  students: number,
+  leaders: number,
+): ActivitiesPricing {
+  let activitiesTotal = 0;
+  const activitiesBreakdown: { label: string; total: number }[] = [];
+
+  if (!selectedActivities) {
+    return { activitiesTotal, activitiesBreakdown };
+  }
+
+  Object.entries(selectedActivities).forEach(([id, sel]) => {
+    if (!sel || !sel.enabled) return;
+
+    const act = loc.activities.find((a) => a.id === id);
+    if (!act) return;
+
+    const price = ov.activities?.[id] ?? act.price;
+
+    let subtotal = 0;
+    let labelDetail = "";
+
+    switch (act.unit) {
+      case "perGroup":
+      case "flat": {
+        subtotal = price;
+        labelDetail = "(whole group)";
+        break;
+      }
+
+      case "perStudent": {
+        const people =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), students)
+            : students;
+        subtotal = price * people;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${people} students)`
+            : "(all students)";
+        break;
+      }
+
+      case "perLeader": {
+        const people =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), leaders)
+            : leaders;
+        subtotal = price * people;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${people} leaders)`
+            : "(all leaders)";
+        break;
+      }
+
+      case "perPerson": {
+        const maxGroup = students + leaders;
+        const people =
+          sel.mode === "quantity"
+            ? Math.min(Math.max(sel.count || 0, 0), maxGroup)
+            : maxGroup;
+        subtotal = price * people;
+        labelDetail =
+          sel.mode === "quantity"
+            ? `(${people} people)`
+            : "(whole group headcount)";
+        break;
+      }
+
+      default: {
+        subtotal = price;
+        labelDetail = "";
+      }
+    }
+
+    activitiesTotal += subtotal;
+    activitiesBreakdown.push({
+      label: `${act.name} ${labelDetail}`.trim(),
+      total: subtotal,
+    });
+  });
+
+  return { activitiesTotal, activitiesBreakdown };
 }

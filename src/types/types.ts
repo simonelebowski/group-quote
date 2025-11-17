@@ -32,6 +32,13 @@ export type ActivityPick = {
   count: number;
 };
 
+export type SelectedActivities = Record<string, ActivityPick>
+
+export type ActivitiesPricing = {
+  activitiesTotal: number;
+  activitiesBreakdown: {label: string; total: number}[]
+}
+
 export type BusCardOption = {
   id: string;
   name: string; // e.g., "Zones 1-2 (weekly)"

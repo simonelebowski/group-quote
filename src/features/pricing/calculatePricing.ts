@@ -2,20 +2,27 @@ import {
   PackageKey,
   LocationPricing,
   TransferOptionId,
+  SelectedActivities,
   Overrides,
 } from "@/types/types";
 import {
   getEffectiveRates,
   computeAccommodationAdjustment,
   getTransferTotal,
+  calculateActivitiesPricing,
 } from "./pricingUtils";
 
 export type PricingResult = {
   currency: string;
+
   perStudentCore: number;
   payingLeaders: number;
   studentsAndPayingLeaders: number;
   coreStudentsAndPayingLeadersTotal: number;
+
+  activitiesTotal: number;
+  activitiesBreakdown: { label: string; total: number }[];
+
   grandTotal: number;
   perStudentAllIn: number | null;
 
@@ -42,7 +49,9 @@ export type PricingResult = {
     perFewerNight: number;
     perExtraLesson: number;
     perFewerLesson: number;
+
     accommodationAdjustment: number;
+    transferTotal: number;
   };
 };
 
@@ -57,9 +66,11 @@ type CalculatePricingArgs = {
   lessonsPerWeek: number;
   weeks: number;
   // inferredWeeks: number;
-  arrivalAirportId: TransferOptionId;
-  departureAirportId: TransferOptionId;
-  // selectedActivities: SelectedActivities;
+
+  arrivalTransferOptionId: TransferOptionId;
+  departureTransferOptionId: TransferOptionId;
+
+  selectedActivities?: SelectedActivities;
   // selectedBusCards: SelectedBusCards;
   // customItems: CustomItem[];
   overrides: Overrides;
@@ -83,6 +94,7 @@ export function calculatePricing({
   leaderAccommodationId,
   arrivalTransferOptionId,
   departureTransferOptionId,
+  selectedActivities,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -107,7 +119,7 @@ export function calculatePricing({
       ? 0
       : nightDelta > 0
       ? nightDelta * perExtraNight
-      : nightDelta * perFewerLesson;
+      : nightDelta * perFewerNight;
   // : Math.abs(nightDelta) * perFewerNight;
 
   // 4) Lessons based on package key
@@ -152,9 +164,18 @@ export function calculatePricing({
     leaders
   );
 
+  // 8) Activities 
+  const { activitiesTotal, activitiesBreakdown } = calculateActivitiesPricing(
+  loc,
+  selectedActivities,
+  ov,
+  students,
+  leaders
+);
+
   // For now, grandTotal is just the core (we'll add extras later)
   const grandTotal =
-    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal;
+    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 
@@ -164,6 +185,8 @@ export function calculatePricing({
     payingLeaders,
     studentsAndPayingLeaders,
     coreStudentsAndPayingLeadersTotal,
+    activitiesTotal,
+    activitiesBreakdown,
     grandTotal,
     perStudentAllIn,
     meta: {
@@ -180,6 +203,7 @@ export function calculatePricing({
       perExtraLesson,
       perFewerLesson,
       accommodationAdjustment,
+      transferTotal,
     },
   };
 }
