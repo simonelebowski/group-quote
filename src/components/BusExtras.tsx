@@ -97,20 +97,20 @@ export default function BusExtras({loc, selectedBusCards, setSelectedBusCards, c
         })}
       </div>
 
-                    <hr className="my-4" />
+      <hr className="my-4" />
 
-                    <div>
-                      <div className="mb-2 font-medium">Extras (ad-hoc)</div>
-                      <p className="mb-2 text-xs text-neutral-600">
-                        Add charges or credits not covered above (e.g., single room
-                        supplement, private guide, visa letter fee, discount). Choose
-                        unit, quantity, and price.
-                      </p>
-                      <CustomItemsEditor
-                        items={customItems}
-                        setItems={setCustomItems}
-                      />
-                    </div>
+      <div>
+        <div className="mb-2 font-medium">Extras (ad-hoc)</div>
+        <p className="mb-2 text-xs text-neutral-600">
+          Add charges or credits not covered above (e.g., single room
+          supplement, private guide, visa letter fee, discount). Choose
+          unit, quantity, and price.
+        </p>
+        <CustomItemsEditor
+          items={customItems}
+          setItems={setCustomItems}
+        />
+      </div>
 
     </Card>
     )

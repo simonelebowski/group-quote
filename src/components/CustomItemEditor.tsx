@@ -99,11 +99,13 @@ export default function CustomItemsEditor({
         </div>
       ))}
       <button
-        className="rounded-xl border px-3 py-2 text-sm"
+        className='rounded-2xl border border-neutral-200/80 bg-white/70 px-3 py-2.5 hover:bg-neutral-50 cursor-pointer'
         onClick={add}
         type="button"
       >
-        + Add custom item
+        <div className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+          + Add custom item
+        </div>   
       </button>
     </div>
   );
