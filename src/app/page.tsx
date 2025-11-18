@@ -18,6 +18,7 @@ import Header from "@/components/Header";
 import Controls from "@/components/Controls";
 import ActivitiesCard from "@/components/ActivitiesCard";
 import BusExtras from "@/components/BusExtras";
+import Summary from "@/components/Summary";
 
 // ---- Admin override types (manual price editing) ----
 type LocationOverrides = {
@@ -152,7 +153,6 @@ export default function QuoteCalculatorPage() {
         baseNights,
         lessonsPerWeek,
         weeks,
-        // inferredWeeks,
         studentAccommodationId,
         leaderAccommodationId,
         arrivalTransferOptionId,
@@ -172,7 +172,6 @@ export default function QuoteCalculatorPage() {
       baseNights,
       lessonsPerWeek,
       weeks,
-      // inferredWeeks,
       studentAccommodationId,
       leaderAccommodationId,
       arrivalTransferOptionId,
@@ -246,6 +245,20 @@ export default function QuoteCalculatorPage() {
 
         {/* Summary */}
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <Summary 
+          loc={loc} 
+          students={students} 
+          leaders={leaders} 
+          freeLeaders={freeLeaders} 
+          packageKey={packageKey} 
+          baseNights={baseNights} 
+          nights={nights} 
+          pricing={pricing} 
+          studentAccTotal={studentAccTotal} 
+          studentAcc={studentAcc} 
+          leaderAccTotal={leaderAccTotal} 
+          leaderAcc={leaderAcc}
+          />
           <Card className="md:col-span-2">
             <h2 className="mb-3 text-lg font-semibold">Breakdown</h2>
             <div className="space-y-2 text-sm">
