@@ -9,6 +9,8 @@ import {
   ActivitiesPricing,
   SelectedBusCards, 
   BusCardsPricing,
+  CustomLineItem,
+  CustomItemsPricing,
 } from "@/types/types";
 
 export function getEffectiveRates(
@@ -286,4 +288,45 @@ export function calculateBusCardsPricing(
   });
 
   return { busCardsTotal, busBreakdown };
+}
+
+// CUSTOM ITEMS---------------------------------------------------------------------------------------------------------------------
+export function calculateCustomItemsPricing(
+  customItems: CustomLineItem[],
+  students: number,
+  leaders: number
+): CustomItemsPricing {
+  let customTotal = 0;
+  const customBreakdown: { label: string; total: number }[] = [];
+
+  const groupSize = students + leaders;
+
+  customItems.forEach((item) => {
+    if (!item.qty || item.qty <= 0) return;
+
+    let subtotal = 0;
+
+    if (item.unit === "perStudent") {
+      subtotal = item.price * item.qty * students;
+    } else if (item.unit === "perLeader") {
+      subtotal = item.price * item.qty * leaders;
+    } else if (item.unit === "perGroup") {
+      subtotal = item.price * groupSize;
+    } else if (item.unit === "flat") {
+      subtotal = item.price;
+    } else if (item.unit === "perUnit") {
+      subtotal = item.price * item.qty;
+    } else {
+      // perUnit, flat
+      subtotal = item.price * item.qty;
+    }
+
+    customTotal += subtotal;
+    customBreakdown.push({
+      label: `${item.name} x${item.qty}`,
+      total: subtotal,
+    });
+  });
+
+  return { customTotal, customBreakdown };
 }

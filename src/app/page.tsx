@@ -159,6 +159,7 @@ export default function QuoteCalculatorPage() {
         departureTransferOptionId,
         selectedActivities,
         selectedBusCards,
+        customItems,
       }),
     [
       loc,
@@ -178,6 +179,7 @@ export default function QuoteCalculatorPage() {
       departureTransferOptionId,
       selectedActivities,
       selectedBusCards,
+      customItems,
     ]
   );
 
@@ -375,7 +377,7 @@ export default function QuoteCalculatorPage() {
                 </div>
               )}
 
-             {/*  {pricing.customBreakdown &&
+            {pricing.customBreakdown &&
                 pricing.customBreakdown.length > 0 && (
                   <div className="mt-2">
                     <div className="mb-1 font-medium">Custom Items</div>
@@ -389,8 +391,8 @@ export default function QuoteCalculatorPage() {
                       ))}
                     </div>
                   </div>
-                )} 
-*/}
+              )} 
+
 
             </div>
           </Card>

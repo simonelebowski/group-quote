@@ -61,6 +61,7 @@ export type BusCardsPricing = {
   busBreakdown: { label: string; total: number }[];
 };
 
+// ACCOMMODATION---------------------------------------------------------------------------------------------------------------------
 export type AccommodationOption = {
   id: string;
   name: string;
@@ -68,15 +69,7 @@ export type AccommodationOption = {
   price: number;
 };
 
-// export type AirportCode =
-//   | "LGW_OR_LHR"
-//   | "LGW"
-//   | "LHR"
-//   | "LTN"
-//   | "STN"
-//   | "LCY"
-//   | "OTHER";
-
+// AIRPORT TRANSFERS--------------------------------------------------------------------------------------------------------------------
 export type TransferOptionId =
   | "lgw_or_lhr"
   | "lgw"
@@ -127,6 +120,7 @@ export type PriceList = {
   locations: LocationPricing[];
 };
 
+// CUSTOM ITEM-------------------------------------------------------------------------------------------------------------------------
 export type CustomLineItem = {
   id: string;
   name: string;
@@ -136,6 +130,12 @@ export type CustomLineItem = {
   mode?: "group" | "quantity" | "flat";
 };
 
+export type CustomItemsPricing = {
+  customTotal: number;
+  customBreakdown: { label: string; total: number }[];
+};
+
+// OVERRIDE-----------------------------------------------------------------------------------------------------------------------------
 export type LocationOverride = {
   basePackages?: Partial<Record<PackageKey, number>>;
   perExtraNight?: number;

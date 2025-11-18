@@ -38,67 +38,6 @@ export default function CustomItemsEditor({
 
   return (
     <div className="space-y-3">
-      {/* {items.map((it, i) => (
-        <div
-          key={it.id}
-          // className="grid grid-cols-1 gap-2 rounded-xl border p-3 md:grid-cols-5 md:items-end"
-          className="grid grid-cols-1 gap-3 rounded-2xl border border-neutral-200/80 bg-white/70 px-3 py-3 shadow-sm transition hover:bg-neutral-50 md:grid-cols-5 md:items-end"
-        >
-          <div>
-            <Label>Name</Label>
-            <input
-              className="mt-1 block h-10 w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-              value={it.name}
-              onChange={(e) => update(i, { name: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label>Unit</Label>
-            <select
-              className="mt-1 block h-10 w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-              value={it.unit}
-              onChange={(e) => update(i, { unit: e.target.value as Unit })}
-            >
-              <option value="perStudent">per student</option>
-              <option value="perLeader">per leader</option>
-              <option value="perGroup">per group</option>
-              <option value="flat">flat</option>
-            </select>
-          </div>
-          <div>
-            <Label>Qty</Label>
-            <input
-              className="mt-1 block h-10 w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-sm text-right focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-              type="number"
-              min={0}
-              value={it.qty}
-              onChange={(e) =>
-                update(i, { qty: parseFloat(e.target.value || "0") })
-              }
-            />
-          </div>
-          <div>
-            <Label>Price</Label>
-            <input
-              className="mt-1 block h-10 w-full rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-sm text-right focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-              type="number"
-              value={it.price}
-              onChange={(e) =>
-                update(i, { price: parseFloat(e.target.value || "0") })
-              }
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-               className="mt-1 rounded-2xl border border-neutral-200/80 bg-white/70 px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-red-500 hover:bg-neutral-50"
-              onClick={() => remove(i)}
-              type="button"
-            >
-              Remove
-            </button>
-          </div>
-        </div>
-      ))} */}
        {items.map((it, i) => {
     // derive a mode with a sensible default
     const mode: "group" | "quantity" | "flat" =
@@ -122,7 +61,7 @@ export default function CustomItemsEditor({
         // "quantity"
         update(i, {
           mode: "quantity",
-          unit: "perGroup", // or "perUnit" if you prefer
+          unit: "perUnit", 
           qty: it.qty || 1,
         });
       }

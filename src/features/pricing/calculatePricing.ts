@@ -5,13 +5,15 @@ import {
   SelectedActivities,
   Overrides,
   SelectedBusCards,
+  CustomLineItem,
 } from "@/types/types";
 import {
   getEffectiveRates,
   computeAccommodationAdjustment,
   getTransferTotal,
   calculateActivitiesPricing,
-  calculateBusCardsPricing ,
+  calculateBusCardsPricing,
+  calculateCustomItemsPricing,
 } from "./pricingUtils";
 
 export type PricingResult = {
@@ -27,6 +29,9 @@ export type PricingResult = {
 
   busCardsTotal: number;                    
   busBreakdown: { label: string; total: number }[];
+
+  customTotal: number;                               
+  customBreakdown: { label: string; total: number }[]; 
 
   grandTotal: number;
   perStudentAllIn: number | null;
@@ -77,7 +82,8 @@ type CalculatePricingArgs = {
 
   selectedActivities?: SelectedActivities;
   selectedBusCards: SelectedBusCards;
-  // customItems: CustomItem[];
+  customItems: CustomLineItem[]; 
+
   overrides: Overrides;
   studentAccommodationId: string | null;
   leaderAccommodationId: string | null;
@@ -101,6 +107,7 @@ export function calculatePricing({
   departureTransferOptionId,
   selectedActivities,
   selectedBusCards,
+  customItems,     
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -188,9 +195,16 @@ export function calculatePricing({
     leaders
   );
 
+  // 10) Custom items
+  const { customTotal, customBreakdown } = calculateCustomItemsPricing(
+  customItems,
+  students,
+  leaders
+);
+
   // For now, grandTotal is just the core (we'll add extras later)
   const grandTotal =
-    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal + busCardsTotal;
+    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal + busCardsTotal + customTotal;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 
@@ -204,6 +218,8 @@ export function calculatePricing({
     activitiesBreakdown,
     busCardsTotal,
     busBreakdown,
+    customTotal,
+    customBreakdown,
     grandTotal,
     perStudentAllIn,
     meta: {
