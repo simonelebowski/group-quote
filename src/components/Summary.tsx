@@ -249,7 +249,7 @@ label="Core × (students + paying leaders)"
         </div>
       </div>
     )}
-
+    
     {/* Custom items */}
     {pricing.customBreakdown &&
       pricing.customBreakdown.length > 0 && (
