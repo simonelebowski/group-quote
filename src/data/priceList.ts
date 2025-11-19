@@ -18,17 +18,9 @@ export const priceList: PriceList = {
       perFewerNight: 45,
       perExtraLesson: 7.5,
       perFewerLesson: 7.5,
-      // transfer: {
-      //   includedAirports: ["LGW", "LHR"],
-      //   supplements: {
-      //     LGW_OR_LHR: { unit: "perStudent", price: 0 },
-      //     LHR: { unit: "perStudent", price: 0 },
-      //     LTN: { unit: "perStudent", price: 20 },
-      //     STN: { unit: "perStudent", price: 20 },
-      //     LCY: { unit: "perStudent", price: 20 },
-      //     OTHER: { unit: "perStudent", price: 35 },
-      //   },
-      // },
+      
+      leaderBasePerWeek: 275,
+
       transfer: {
         // includedAirports: ["LGW", "LHR"],
         options: [
@@ -234,6 +226,9 @@ export const priceList: PriceList = {
       perFewerNight: 55,
       perExtraLesson: 9,
       perFewerLesson: 9,
+
+      leaderBasePerWeek: 320,
+      
       // transfer: {
       //   includedAirports: ["LGW", "LHR"],
       //   supplements: {

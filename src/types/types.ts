@@ -107,6 +107,7 @@ export type LocationPricing = {
   perFewerNight: number; // per-student, per-night fewer than package
   perExtraLesson: number; // per-student, per-lesson above 20/week
   perFewerLesson: number; // per-student, per-lesson below 20/week
+  leaderBasePerWeek: number;
   transfer: TransferRule;
   activities: Activity[];
   busCards: BusCardOption[];
@@ -142,6 +143,7 @@ export type LocationOverride = {
   perFewerNight?: number;
   perExtraLesson?: number;
   perFewerLesson?: number;
+  leaderBasePerWeek?: number;
 };
 
 export type Overrides = Record<string, LocationOverride>;

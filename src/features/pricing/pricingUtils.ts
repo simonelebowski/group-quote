@@ -106,8 +106,6 @@ export function getTransferTotal(
   const departureTotal = departurePrice * (students + leaders);
 
   // price is per person, per direction
-  console.log(arrivalId);
-  console.log(departureId);
   return arrivalTotal + departureTotal;
 }
 

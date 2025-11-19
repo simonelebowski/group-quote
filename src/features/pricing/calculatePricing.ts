@@ -20,8 +20,13 @@ export type PricingResult = {
   currency: string;
 
   perStudentCore: number;
+  perLeaderCore: number;  
+
   payingLeaders: number;
   studentsAndPayingLeaders: number;
+
+  coreStudentsTotal: number;         
+  corePayingLeadersTotal: number;    
   coreStudentsAndPayingLeadersTotal: number;
 
   activitiesTotal: number;
@@ -39,6 +44,7 @@ export type PricingResult = {
   // for now we don't include extras; we'll add later
   meta: {
     basePerStudent: number;
+    leaderBasePerWeek: number; 
 
     // nights
     nightDelta: number;
@@ -151,12 +157,26 @@ export function calculatePricing({
       ? lessonDelta * perExtraLesson
       : lessonDelta * perFewerLesson;
 
-  // 5) Core per-student and totals
+  // 4b) Leader base
+  const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
+  const leaderBasePerWeek  = ov.leaderBasePerWeek ?? loc.leaderBasePerWeek;
+  const leaderBaseForPackage = leaderBasePerWeek * packageWeeks;
+
+  // 5) Core per-student, per-leader and totals
   const perStudentCore =
     basePerStudent + nightAdjPerStudent + lessonAdjPerStudent;
 
-  const coreStudentsAndPayingLeadersTotal =
-    perStudentCore * studentsAndPayingLeaders;
+  const perLeaderCore =
+    leaderBaseForPackage + nightAdjPerStudent;
+
+  // const coreStudentsAndPayingLeadersTotal =
+  //   perStudentCore * studentsAndPayingLeaders;
+  
+  // 5b) Core totals split by role
+  const coreStudentsTotal = students * perStudentCore;
+  const corePayingLeadersTotal = payingLeaders * perLeaderCore;
+
+  const coreStudentsAndPayingLeadersTotal = coreStudentsTotal + corePayingLeadersTotal;
 
   // 6) Accommodation supplement/discount
   const accommodationAdjustment = computeAccommodationAdjustment(
@@ -211,8 +231,11 @@ export function calculatePricing({
   return {
     currency,
     perStudentCore,
+    perLeaderCore,
     payingLeaders,
     studentsAndPayingLeaders,
+    coreStudentsTotal,
+    corePayingLeadersTotal,
     coreStudentsAndPayingLeadersTotal,
     activitiesTotal,
     activitiesBreakdown,
@@ -224,6 +247,7 @@ export function calculatePricing({
     perStudentAllIn,
     meta: {
       basePerStudent,
+      leaderBasePerWeek,
       nightDelta,
       nightAdjPerStudent,
       effectiveWeeks,
