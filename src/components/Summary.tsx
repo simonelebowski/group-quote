@@ -18,7 +18,23 @@ function pkgLabel(k: PackageKey) {
   }
 }
 
-export default function Summary({loc, students, leaders, freeLeaders, packageKey, baseNights, nights, pricing, studentAccTotal, studentAcc, leaderAccTotal, leaderAcc}) {
+export default function Summary({
+  loc, 
+  students, 
+  leaders, 
+  freeLeaders, 
+  packageKey, 
+  baseNights, 
+  nights, 
+  pricing, 
+  studentAccTotal, 
+  studentAcc, 
+  leaderAccTotal, 
+  leaderAcc,
+  arrivalOpt,
+  departureOpt,
+}) {
+  console.log(arrivalOpt)
     return (
 <Card className="md:col-span-2">
   <h2 className="mb-3 text-lg font-semibold">Breakdown</h2>
@@ -164,9 +180,9 @@ label="Core × (students + paying leaders)"
 
     <hr className="my-3" />
 
-    {/* 3. Accommodation (different prices for students vs leaders) */}
+    {/* 3. Accommodation & Transfers*/}
     <div className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-      Accommodation
+      Accommodation & Transfers
     </div>
 
     {studentAcc && (
@@ -195,17 +211,44 @@ label="Core × (students + paying leaders)"
       />
     )}
 
+     {arrivalOpt && (
+      <Row
+        label={`Arrival transfer: ${arrivalOpt.name}`}
+        value={fmt(
+          pricing.meta.arrivalTransferTotal,
+          pricing.currency
+        )}
+      />
+    )}
+
+    {departureOpt && (
+      <Row
+        label={`Departure transfer: ${departureOpt.name}`}
+        value={fmt(
+          pricing.meta.departureTransferTotal,
+          pricing.currency
+        )}
+      />
+    )}
+
+    {pricing.meta.transferTotal !== 0 && (
+      <Row
+        label="Transfer subtotal"
+        value={fmt(pricing.meta.transferTotal, pricing.currency)}
+      />
+    )}
+
     {/* small note about free leaders */}
-    <Row
+    {/* <Row
       label="Free leaders"
       value="Don't pay the core package, but do pay activities, bus cards and custom extras."
-    />
+    /> */}
 
     <hr className="my-3" />
 
-    {/* 4. Transfers & extras (charged for all heads, incl. free leaders) */}
+    {/* 4. Bus Cards & extras (charged for all heads, incl. free leaders) */}
     <div className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-      Transfers & Extras
+      Bus Cards & Extras
     </div>
 
     {pricing.meta.transferTotal !== 0 && (

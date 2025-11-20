@@ -93,7 +93,7 @@ export function getTransferTotal(
   departureId: TransferOptionId,
   students: number,
   leaders: number
-): number {
+): {total: number; arrivalTotal: number; departureTotal: number} {
   const findPrice = (id: string): number => {
     const opt = loc.transfer.options.find((o) => o.id === id);
     return opt?.price ?? 0;
@@ -106,7 +106,11 @@ export function getTransferTotal(
   const departureTotal = departurePrice * (students + leaders);
 
   // price is per person, per direction
-  return arrivalTotal + departureTotal;
+  return {
+    total: arrivalTotal + departureTotal,
+    arrivalTotal,
+    departureTotal
+  }
 }
 
 // ACTIVITIES--------------------------------------------------------------------------------------------------------------------

@@ -68,6 +68,8 @@ export type PricingResult = {
 
     accommodationAdjustment: number;
     transferTotal: number;
+    arrivalTransferTotal: number;
+    departureTransferTotal: number;
   };
 };
 
@@ -189,13 +191,25 @@ export function calculatePricing({
   );
 
   // 7) Transfer
-  const transferTotal = getTransferTotal(
+  const {
+    total: transferTotal,
+    arrivalTotal: arrivalTransferTotal,
+    departureTotal: departureTransferTotal,
+  } = getTransferTotal(
     loc,
-    arrivalTransferOptionId,
-    departureTransferOptionId,
-    students,
-    leaders
-  );
+  arrivalTransferOptionId,
+  departureTransferOptionId,
+  students,
+  leaders
+  )
+
+  // const transferTotal = getTransferTotal(
+  //   loc,
+  //   arrivalTransferOptionId,
+  //   departureTransferOptionId,
+  //   students,
+  //   leaders
+  // );
 
   // 8) Activities 
   const { activitiesTotal, activitiesBreakdown } = calculateActivitiesPricing(
@@ -261,6 +275,8 @@ export function calculatePricing({
       perFewerLesson,
       accommodationAdjustment,
       transferTotal,
+      arrivalTransferTotal,
+      departureTransferTotal,
     },
   };
 }

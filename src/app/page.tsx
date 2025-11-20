@@ -18,6 +18,7 @@ import Controls from "@/components/Controls";
 import ActivitiesCard from "@/components/ActivitiesCard";
 import BusExtras from "@/components/BusExtras";
 import Summary from "@/components/Summary";
+import Total from "@/components/Total";
 
 // ---- Admin override types (manual price editing) ----
 type LocationOverrides = {
@@ -92,8 +93,14 @@ export default function QuoteCalculatorPage() {
   // TRANSFERS VARIABLES-------------------------------------------------------------------------------------------------------------
   const [arrivalTransferOptionId, setArrivalTransferOptionId] =
     useState<TransferOptionId>("lgw_or_lhr");
+  const arrivalOpt = loc.transfer.options.find(
+  (o) => o.id === arrivalTransferOptionId
+);  
   const [departureTransferOptionId, setDepartureTransferOptionId] =
     useState<TransferOptionId>("lgw_or_lhr");
+  const departureOpt = loc.transfer.options.find(
+  (o) => o.id === departureTransferOptionId
+);
 
   // ACTIVITIES, BUS VARIABLES & EXTRAS---------------------------------------------------------------------------------------------
   const [selectedActivities, setSelectedActivities] = useState<SelectedActivities>({});
@@ -257,10 +264,13 @@ export default function QuoteCalculatorPage() {
           studentAcc={studentAcc} 
           leaderAccTotal={leaderAccTotal} 
           leaderAcc={leaderAcc}
+          arrivalOpt={arrivalOpt}
+          departureOpt={departureOpt} 
           />
 
           {/* Total */}
-          <Card>
+          <Total fmt={fmt} pricing={pricing} />
+          {/* <Card>
             <h2 className="mb-3 text-lg font-semibold">Totals</h2>
             <div className="space-y-2 text-sm">
               <Row
@@ -279,7 +289,7 @@ export default function QuoteCalculatorPage() {
               Notes: Prices are editable in the Admin panel. All totals update
               instantly as you change values.
             </div>
-          </Card>
+          </Card> */}
         </div>
 
         {/* ---- Admin / Overrides Panel ---- */}
