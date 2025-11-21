@@ -98,7 +98,10 @@ export default function ActivitySection({
                     }
                   >
                     <option value="group">Whole group</option>
+                    {/* <option value="students">Only students</option>
+                    <option value="leaders">Only leaders</option> */}
                     <option value="quantity">Specific quantity</option>
+                    <option value="flat">Flat</option>      
                   </select>
 
                   {sel.enabled && sel.mode === "quantity" && (

@@ -29,7 +29,7 @@ export type Activity = {
 
 export type ActivityPick = {
   enabled: boolean;
-  mode: "group" | "quantity";
+  mode: "group" | "quantity" | "flat" | "students" | "leaders";
   count: number;
 };
 
