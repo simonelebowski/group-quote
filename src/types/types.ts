@@ -8,7 +8,7 @@ export type Unit =
   | "perPerson"
   | "flat";
 
-  // ACTIVITIES ----------------------------------------------------------------------------------------------------------------
+// ACTIVITIES ----------------------------------------------------------------------------------------------------------------
 export type ActivityCategory =
   | "afternoon"
   | "evening"
@@ -33,12 +33,12 @@ export type ActivityPick = {
   count: number;
 };
 
-export type SelectedActivities = Record<string, ActivityPick>
+export type SelectedActivities = Record<string, ActivityPick>;
 
 export type ActivitiesPricing = {
   activitiesTotal: number;
-  activitiesBreakdown: {label: string; total: number}[]
-}
+  activitiesBreakdown: { label: string; total: number }[];
+};
 
 // BUS CARDS ----------------------------------------------------------------------------------------------------------------
 export type BusCardOption = {
@@ -147,3 +147,14 @@ export type LocationOverride = {
 };
 
 export type Overrides = Record<string, LocationOverride>;
+
+export type QuoteOverrides = {
+  basePerStudent?: number;
+  perExtraNight?: number;
+  perFewerNight?: number;
+  perExtraLesson?: number;
+  perFewerLesson?: number;
+  activities?: Record<string, number>;
+  busCards?: Record<string, number>;
+  // add more bits later if needed
+};

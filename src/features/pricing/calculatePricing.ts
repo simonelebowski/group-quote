@@ -20,23 +20,23 @@ export type PricingResult = {
   currency: string;
 
   perStudentCore: number;
-  perLeaderCore: number;  
+  perLeaderCore: number;
 
   payingLeaders: number;
   studentsAndPayingLeaders: number;
 
-  coreStudentsTotal: number;         
-  corePayingLeadersTotal: number;    
+  coreStudentsTotal: number;
+  corePayingLeadersTotal: number;
   coreStudentsAndPayingLeadersTotal: number;
 
   activitiesTotal: number;
   activitiesBreakdown: { label: string; total: number }[];
 
-  busCardsTotal: number;                    
+  busCardsTotal: number;
   busBreakdown: { label: string; total: number }[];
 
-  customTotal: number;                               
-  customBreakdown: { label: string; total: number }[]; 
+  customTotal: number;
+  customBreakdown: { label: string; total: number }[];
 
   grandTotal: number;
   perStudentAllIn: number | null;
@@ -44,7 +44,7 @@ export type PricingResult = {
   // for now we don't include extras; we'll add later
   meta: {
     basePerStudent: number;
-    leaderBasePerWeek: number; 
+    leaderBasePerWeek: number;
 
     // nights
     nightDelta: number;
@@ -90,9 +90,9 @@ type CalculatePricingArgs = {
 
   selectedActivities?: SelectedActivities;
   selectedBusCards: SelectedBusCards;
-  customItems: CustomLineItem[]; 
+  customItems: CustomLineItem[];
 
-  overrides: Overrides;
+  quoteOverrides: Overrides;
   studentAccommodationId: string | null;
   leaderAccommodationId: string | null;
 };
@@ -103,7 +103,7 @@ export function calculatePricing({
   leaders,
   freeLeaders,
   packageKey,
-  overrides,
+  quoteOverrides,
   nights,
   baseNights,
   lessonsPerWeek,
@@ -115,7 +115,7 @@ export function calculatePricing({
   departureTransferOptionId,
   selectedActivities,
   selectedBusCards,
-  customItems,     
+  customItems,
 }: CalculatePricingArgs): PricingResult {
   const currency = loc.currency;
 
@@ -124,7 +124,7 @@ export function calculatePricing({
   const studentsAndPayingLeaders = students + payingLeaders;
 
   // 2) Apply override for base package if present + effective rates
-  const ov = overrides[loc.locationId] ?? {};
+  const ov = quoteOverrides ?? {};
   const {
     basePerStudent,
     perExtraNight,
@@ -161,24 +161,24 @@ export function calculatePricing({
 
   // 4b) Leader base
   const packageWeeks = packageKey === "6n7d" || packageKey === "7n8d" ? 1 : 2;
-  const leaderBasePerWeek  = ov.leaderBasePerWeek ?? loc.leaderBasePerWeek;
+  const leaderBasePerWeek = ov.leaderBasePerWeek ?? loc.leaderBasePerWeek;
   const leaderBaseForPackage = leaderBasePerWeek * packageWeeks;
 
   // 5) Core per-student, per-leader and totals
   const perStudentCore =
     basePerStudent + nightAdjPerStudent + lessonAdjPerStudent;
 
-  const perLeaderCore =
-    leaderBaseForPackage + nightAdjPerStudent;
+  const perLeaderCore = leaderBaseForPackage + nightAdjPerStudent;
 
   // const coreStudentsAndPayingLeadersTotal =
   //   perStudentCore * studentsAndPayingLeaders;
-  
+
   // 5b) Core totals split by role
   const coreStudentsTotal = students * perStudentCore;
   const corePayingLeadersTotal = payingLeaders * perLeaderCore;
 
-  const coreStudentsAndPayingLeadersTotal = coreStudentsTotal + corePayingLeadersTotal;
+  const coreStudentsAndPayingLeadersTotal =
+    coreStudentsTotal + corePayingLeadersTotal;
 
   // 6) Accommodation supplement/discount
   const accommodationAdjustment = computeAccommodationAdjustment(
@@ -197,11 +197,11 @@ export function calculatePricing({
     departureTotal: departureTransferTotal,
   } = getTransferTotal(
     loc,
-  arrivalTransferOptionId,
-  departureTransferOptionId,
-  students,
-  leaders
-  )
+    arrivalTransferOptionId,
+    departureTransferOptionId,
+    students,
+    leaders
+  );
 
   // const transferTotal = getTransferTotal(
   //   loc,
@@ -211,7 +211,7 @@ export function calculatePricing({
   //   leaders
   // );
 
-  // 8) Activities 
+  // 8) Activities
   const { activitiesTotal, activitiesBreakdown } = calculateActivitiesPricing(
     loc,
     selectedActivities,
@@ -231,14 +231,19 @@ export function calculatePricing({
 
   // 10) Custom items
   const { customTotal, customBreakdown } = calculateCustomItemsPricing(
-  customItems,
-  students,
-  leaders
-);
+    customItems,
+    students,
+    leaders
+  );
 
   // For now, grandTotal is just the core (we'll add extras later)
   const grandTotal =
-    coreStudentsAndPayingLeadersTotal + accommodationAdjustment + transferTotal + activitiesTotal + busCardsTotal + customTotal;
+    coreStudentsAndPayingLeadersTotal +
+    accommodationAdjustment +
+    transferTotal +
+    activitiesTotal +
+    busCardsTotal +
+    customTotal;
 
   const perStudentAllIn = students > 0 ? grandTotal / students : null;
 

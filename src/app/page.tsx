@@ -7,6 +7,7 @@ import {
   PackageKey,
   SelectedActivities,
   SelectedBusCards,
+  QuoteOverrides,
 } from "@/types/types";
 import { priceList } from "@/data/priceList";
 import { calculatePricing } from "@/features/pricing/calculatePricing";
@@ -93,25 +94,29 @@ export default function QuoteCalculatorPage() {
   const [arrivalTransferOptionId, setArrivalTransferOptionId] =
     useState<TransferOptionId>("lgw_or_lhr");
   const arrivalOpt = loc.transfer.options.find(
-  (o) => o.id === arrivalTransferOptionId
-);  
+    (o) => o.id === arrivalTransferOptionId
+  );
   const [departureTransferOptionId, setDepartureTransferOptionId] =
     useState<TransferOptionId>("lgw_or_lhr");
   const departureOpt = loc.transfer.options.find(
-  (o) => o.id === departureTransferOptionId
-);
+    (o) => o.id === departureTransferOptionId
+  );
 
   // ACTIVITIES, BUS VARIABLES & EXTRAS---------------------------------------------------------------------------------------------
-  const [selectedActivities, setSelectedActivities] = useState<SelectedActivities>({});
-  const [selectedBusCards, setSelectedBusCards] = useState<SelectedBusCards>({});
+  const [selectedActivities, setSelectedActivities] =
+    useState<SelectedActivities>({});
+  const [selectedBusCards, setSelectedBusCards] = useState<SelectedBusCards>(
+    {}
+  );
 
   // NEW: admin overrides + custom items
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [overrides, setOverrides] = useState<Record<string, LocationOverrides>>(
-    {}
-  );
+  const [quoteOverrides, setQuoteOverrides] = useState<QuoteOverrides>({});
+  // const [overrides, setOverrides] = useState<Record<string, LocationOverrides>>(
+  //   {}
+  // );
   const [customItems, setCustomItems] = useState<CustomLineItem[]>([]);
-  const getOv = (id: string) => overrides[id] || {};
+  // const getOv = (id: string) => overrides[id] || {};
 
   // Auto-calc free leaders based on ratio; you can override manually by changing `leaders`.
   // const freeLeaders = useMemo(
@@ -153,7 +158,7 @@ export default function QuoteCalculatorPage() {
         leaders,
         freeLeaders,
         packageKey,
-        overrides,
+        quoteOverrides,
         nights,
         baseNights,
         lessonsPerWeek,
@@ -172,7 +177,7 @@ export default function QuoteCalculatorPage() {
       leaders,
       freeLeaders,
       packageKey,
-      overrides,
+      quoteOverrides,
       nights,
       baseNights,
       lessonsPerWeek,
@@ -250,21 +255,24 @@ export default function QuoteCalculatorPage() {
 
         {/* Summary */}
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Summary 
-          loc={loc} 
-          students={students} 
-          leaders={leaders} 
-          freeLeaders={freeLeaders} 
-          packageKey={packageKey} 
-          baseNights={baseNights} 
-          nights={nights} 
-          pricing={pricing} 
-          studentAccTotal={studentAccTotal} 
-          studentAcc={studentAcc} 
-          leaderAccTotal={leaderAccTotal} 
-          leaderAcc={leaderAcc}
-          arrivalOpt={arrivalOpt}
-          departureOpt={departureOpt} 
+          <Summary
+            loc={loc}
+            students={students}
+            leaders={leaders}
+            freeLeaders={freeLeaders}
+            packageKey={packageKey}
+            baseNights={baseNights}
+            nights={nights}
+            pricing={pricing}
+            studentAccTotal={studentAccTotal}
+            studentAcc={studentAcc}
+            leaderAccTotal={leaderAccTotal}
+            leaderAcc={leaderAcc}
+            arrivalOpt={arrivalOpt}
+            departureOpt={departureOpt}
+            editMode={editMode}
+            quoteOverrides={quoteOverrides}
+            setQuoteOverrides={setQuoteOverrides}
           />
 
           {/* Total */}
@@ -272,7 +280,7 @@ export default function QuoteCalculatorPage() {
         </div>
 
         {/* ---- Admin / Overrides Panel ---- */}
-        {editMode && (
+        {/* {editMode && (
           <div className="mt-6 grid grid-cols-1 gap-4">
             <Card>
               <h2 className="mb-3 text-lg font-semibold">
@@ -493,7 +501,7 @@ export default function QuoteCalculatorPage() {
               </div>
             </Card>
           </div>
-        )}
+        )} */}
 
         <footer className="mt-8 text-center text-xs text-neutral-500">
           FOOTER

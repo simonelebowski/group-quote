@@ -7,21 +7,21 @@ import {
   TransferOptionId,
   SelectedActivities,
   ActivitiesPricing,
-  SelectedBusCards, 
+  SelectedBusCards,
   BusCardsPricing,
   CustomLineItem,
   CustomItemsPricing,
+  QuoteOverrides,
 } from "@/types/types";
 
 export function getEffectiveRates(
   loc: LocationPricing,
   packageKey: PackageKey,
-  ov: LocationOverride | undefined
+  ov: QuoteOverrides | undefined
 ) {
   const o = ov ?? {};
 
-  const basePerStudent =
-    o.basePackages?.[packageKey] ?? loc.basePackages[packageKey];
+  const basePerStudent = o.basePerStudent ?? loc.basePackages[packageKey];
 
   const perExtraNight = o.perExtraNight ?? loc.perExtraNight;
   const perFewerNight = o.perFewerNight ?? loc.perFewerNight;
@@ -93,7 +93,7 @@ export function getTransferTotal(
   departureId: TransferOptionId,
   students: number,
   leaders: number
-): {total: number; arrivalTotal: number; departureTotal: number} {
+): { total: number; arrivalTotal: number; departureTotal: number } {
   const findPrice = (id: string): number => {
     const opt = loc.transfer.options.find((o) => o.id === id);
     return opt?.price ?? 0;
@@ -109,17 +109,17 @@ export function getTransferTotal(
   return {
     total: arrivalTotal + departureTotal,
     arrivalTotal,
-    departureTotal
-  }
+    departureTotal,
+  };
 }
 
 // ACTIVITIES--------------------------------------------------------------------------------------------------------------------
 export function calculateActivitiesPricing(
   loc: LocationPricing,
   selectedActivities: SelectedActivities,
-  ov: { activities?: Record<string, number>},
+  ov: { activities?: Record<string, number> },
   students: number,
-  leaders: number,
+  leaders: number
 ): ActivitiesPricing {
   let activitiesTotal = 0;
   const activitiesBreakdown: { label: string; total: number }[] = [];
@@ -154,9 +154,7 @@ export function calculateActivitiesPricing(
             : students;
         subtotal = price * people;
         labelDetail =
-          sel.mode === "quantity"
-            ? `(${people} students)`
-            : "(all students)";
+          sel.mode === "quantity" ? `(${people} students)` : "(all students)";
         break;
       }
 
@@ -167,9 +165,7 @@ export function calculateActivitiesPricing(
             : leaders;
         subtotal = price * people;
         labelDetail =
-          sel.mode === "quantity"
-            ? `(${people} leaders)`
-            : "(all leaders)";
+          sel.mode === "quantity" ? `(${people} leaders)` : "(all leaders)";
         break;
       }
 
